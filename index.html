@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心灵驿站 - 心理测评中心</title>
+    <style>
+        :root {
+            --bg: #f7f4f0;
+            --card-bg: #ffffff;
+            --text: #3a3540;
+            --text-secondary: #6b6372;
+            --text-muted: #9a919e;
+            --primary: #5b8c9e;
+            --primary-light: #e8f0f4;
+            --primary-dark: #3d6a7c;
+            --symptom: #5b8c9e;
+            --symptom-bg: #eaf3f7;
+            --symptom-tag: #d0e4ed;
+            --personality: #7b6b8e;
+            --personality-bg: #f2eef6;
+            --personality-tag: #e2daea;
+            --special: #5e8c6f;
+            --special-bg: #eaf5ee;
+            --special-tag: #d0e8d6;
+            --warning-bg: #fef9f0;
+            --warning-border: #f0d89c;
+            --warning-text: #8b6d3b;
+            --shadow-sm: 0 1px 3px rgba(58, 53, 64, 0.06), 0 1px 2px rgba(58, 53, 64, 0.04);
+            --shadow-md: 0 4px 16px rgba(58, 53, 64, 0.07), 0 2px 6px rgba(58, 53, 64, 0.04);
+            --shadow-lg: 0 8px 30px rgba(58, 53, 64, 0.10), 0 3px 10px rgba(58, 53, 64, 0.05);
+            --shadow-xl: 0 16px 48px rgba(58, 53, 64, 0.13), 0 4px 16px rgba(58, 53, 64, 0.06);
+            --radius-sm: 10px;
+            --radius: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 24px;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-sans: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            background-image:
+                radial-gradient(ellipse at 15% 10%, rgba(91, 140, 158, 0.05) 0%, transparent 60%),
+                radial-gradient(ellipse at 85% 90%, rgba(123, 107, 142, 0.04) 0%, transparent 60%),
+                radial-gradient(ellipse at 50% 50%, rgba(94, 140, 111, 0.03) 0%, transparent 70%);
+            background-attachment: fixed;
+        }
+
+        /* ========== 顶部导航条 ========== */
+        .top-bar {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(58, 53, 64, 0.06);
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: var(--transition);
+        }
+        .top-bar-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text);
+        }
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, #5b8c9e 0%, #7b9fb0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.15rem;
+            letter-spacing: 0.02em;
+            color: var(--text);
+        }
+        .top-bar-links {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .top-bar-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            padding: 6px 14px;
+            border-radius: 20px;
+            transition: var(--transition);
+            white-space: nowrap;
+            font-weight: 500;
+        }
+        .top-bar-links a:hover {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        /* ========== 主容器 ========== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ========== Hero 头部 ========== */
+        .hero {
+            text-align: center;
+            padding: 48px 20px 32px;
+        }
+        .hero-badge {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+        }
+        .hero h1 {
+            font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            color: #2c2633;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+        .hero h1 .accent {
+            color: var(--primary);
+        }
+        .hero-subtitle {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            max-width: 560px;
+            margin: 0 auto;
+            font-weight: 400;
+        }
+
+        /* ========== 统计条 ========== */
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+            margin-bottom: 36px;
+        }
+        .stat-item {
+            text-align: center;
+            min-width: 80px;
+        }
+        .stat-num {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: -0.02em;
+            line-height: 1;
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            letter-spacing: 0.03em;
+        }
+
+        /* ========== 温馨提示 ========== */
+        .notice-banner {
+            background: var(--warning-bg);
+            border: 1px solid var(--warning-border);
+            border-radius: var(--radius);
+            padding: 14px 20px;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 0.9rem;
+            color: var(--warning-text);
+            line-height: 1.5;
+        }
+        .notice-icon {
+            font-size: 1.3rem;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .notice-banner strong {
+            color: #6b4f20;
+        }
+
+        /* ========== 分类筛选按钮 ========== */
+        .filter-section {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+        }
+        .filter-btn {
+            padding: 10px 22px;
+            border-radius: 24px;
+            border: 1.5px solid #e0dbe4;
+            background: #fff;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: var(--transition);
+            font-family: var(--font-sans);
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .filter-btn:hover {
+            border-color: #c5bdd0;
+            color: var(--text);
+            background: #faf9fb;
+        }
+        .filter-btn.active {
+            background: var(--text);
+            color: #fff;
+            border-color: var(--text);
+            font-weight: 600;
+            box-shadow: var(--shadow-md);
+        }
+        .filter-btn .filter-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 6px;
+            vertical-align: middle;
+            position: relative;
+            top: -1px;
+        }
+        .filter-dot.symptom {
+            background: var(--symptom);
+        }
+        .filter-dot.personality {
+            background: var(--personality);
+        }
+        .filter-dot.special {
+            background: var(--special);
+        }
+        .filter-dot.all {
+            background: #888;
+        }
+
+        /* ========== 卡片网格 ========== */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 18px;
+            margin-bottom: 48px;
+        }
+        .card-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            border-radius: var(--radius-lg);
+            transition: var(--transition);
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+        .card-link:focus-visible {
+            box-shadow: 0 0 0 3px rgba(91, 140, 158, 0.35);
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 22px 24px 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(58, 53, 64, 0.05);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            border-radius: 3px 3px 0 0;
+            transition: var(--transition);
+            opacity: 0;
+        }
+        .card-link:hover .card {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-3px);
+            border-color: rgba(58, 53, 64, 0.1);
+        }
+        .card-link:hover .card::before {
+            opacity: 1;
+        }
+        .card-link:active .card {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+            transition: 0.1s ease;
+        }
+        /* 分类颜色 */
+        .card.symptom::before {
+            background: var(--symptom);
+        }
+        .card.personality::before {
+            background: var(--personality);
+        }
+        .card.special::before {
+            background: var(--special);
+        }
+        .card-top {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 12px;
+        }
+        .card-emoji {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+            transition: var(--transition);
+        }
+        .card-emoji.symptom {
+            background: var(--symptom-bg);
+        }
+        .card-emoji.personality {
+            background: var(--personality-bg);
+        }
+        .card-emoji.special {
+            background: var(--special-bg);
+        }
+        .card-title-group {
+            flex: 1;
+            min-width: 0;
+        }
+        .card-title {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #2c2633;
+            letter-spacing: 0.02em;
+            line-height: 1.3;
+            margin-bottom: 2px;
+        }
+        .card-eng {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .card-desc {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.55;
+            margin-bottom: 14px;
+            flex: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .card-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+        .card-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #f9f7fa;
+            padding: 5px 10px;
+            border-radius: 14px;
+            white-space: nowrap;
+            letter-spacing: 0.02em;
+        }
+        .card-tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            padding: 4px 10px;
+            border-radius: 12px;
+            text-transform: uppercase;
+        }
+        .card-tag.symptom {
+            background: var(--symptom-tag);
+            color: #3d6a7c;
+        }
+        .card-tag.personality {
+            background: var(--personality-tag);
+            color: #5a4a6e;
+        }
+        .card-tag.special {
+            background: var(--special-tag);
+            color: #3d6a4f;
+        }
+        .card-tag.quick {
+            background: #fef0e6;
+            color: #b86e2d;
+            animation: subtlePulse 2.5s ease-in-out infinite;
+        }
+        @keyframes subtlePulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+        .card-arrow {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            color: #d0cad6;
+            transition: var(--transition);
+            opacity: 0;
+        }
+        .card-link:hover .card-arrow {
+            opacity: 1;
+            right: 16px;
+            color: var(--text-muted);
+        }
+
+        /* ========== 无结果 ========== */
+        .no-results {
+            text-align: center;
+            padding: 48px 20px;
+            color: var(--text-muted);
+            grid-column: 1 / -1;
+        }
+        .no-results .no-results-emoji {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+        .no-results p {
+            font-size: 0.95rem;
+        }
+
+        /* ========== 页脚 ========== */
+        .footer {
+            text-align: center;
+            padding: 28px 20px 40px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            line-height: 1.7;
+            border-top: 1px solid rgba(58, 53, 64, 0.06);
+            margin-top: 8px;
+        }
+        .footer strong {
+            color: var(--text-secondary);
+        }
+
+        /* ========== 回到顶部按钮 ========== */
+        .back-to-top {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #fff;
+            border: 1.5px solid #e0dbe4;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            z-index: 90;
+            opacity: 0;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .back-to-top.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .back-to-top:hover {
+            border-color: #c5bdd0;
+            color: var(--text);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        /* ========== 响应式 ========== */
+        @media (max-width: 768px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .hero {
+                padding: 32px 12px 24px;
+            }
+            .hero h1 {
+                font-size: 1.55rem;
+            }
+            .hero-subtitle {
+                font-size: 0.9rem;
+            }
+            .stats-row {
+                gap: 18px;
+            }
+            .stat-num {
+                font-size: 1.4rem;
+            }
+            .filter-btn {
+                padding: 8px 16px;
+                font-size: 0.82rem;
+            }
+            .card {
+                padding: 18px 18px 16px;
+            }
+            .card-arrow {
+                opacity: 0.35;
+                right: 14px;
+            }
+            .card-link:hover .card-arrow {
+                right: 14px;
+            }
+            .top-bar-links a {
+                font-size: 0.78rem;
+                padding: 4px 10px;
+            }
+            .logo-text {
+                font-size: 1rem;
+            }
+            .back-to-top {
+                bottom: 18px;
+                right: 16px;
+                width: 38px;
+                height: 38px;
+                font-size: 1rem;
+            }
+        }
+        @media (max-width: 420px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            .card-meta {
+                gap: 6px;
+                font-size: 0.73rem;
+            }
+            .card-meta span {
+                padding: 4px 8px;
+            }
+            .filter-section {
+                gap: 6px;
+            }
+            .filter-btn {
+                padding: 7px 13px;
+                font-size: 0.76rem;
+            }
+            .container {
+                padding: 0 12px;
+            }
+            .top-bar-inner {
+                padding: 0 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== 顶部导航条 ==================== -->
+    <header class="top-bar">
+        <div class="top-bar-inner">
+            <a href="index.html" class="logo-area" aria-label="心灵驿站首页">
+                <div class="logo-icon">🧠</div>
+                <span class="logo-text">心灵驿站</span>
+            </a>
+            <nav class="top-bar-links">
+                <a href="index.html">🏠 量表目录</a>
+                <a href="#notice">⚠️ 须知</a>
+                <a href="#footer">ℹ️ 关于</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ==================== 主内容区 ==================== -->
+    <main class="container">
+
+        <!-- Hero -->
+        <section class="hero">
+            <div class="hero-badge">🧭 心理健康自评工具集</div>
+            <h1>选择一份<span class="accent">量表</span>，开启自我探索</h1>
+            <p class="hero-subtitle">
+                我们收录了多种经过验证的心理测评工具，帮助你了解自己的情绪状态、性格特点和心理倾向。
+            </p>
+        </section>
+
+        <!-- 统计条 -->
+        <div class="stats-row">
+            <div class="stat-item">
+                <div class="stat-num" id="totalCount">13</div>
+                <div class="stat-label">专业量表</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-num">3</div>
+                <div class="stat-label">分类维度</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-num">2-40</div>
+                <div class="stat-label">分钟完成</div>
+            </div>
+        </div>
+
+        <!-- 温馨提示 -->
+        <div class="notice-banner" id="notice">
+            <span class="notice-icon">⚠️</span>
+            <div>
+                <strong>重要提示：</strong>本站所有量表均为<strong>自我筛查工具</strong>，结果仅供参考和自我了解，
+                <strong>不能替代专业心理医生的诊断</strong>。如果你感到明显的心理困扰，请及时寻求专业帮助。
+                部分量表题目较多，请在安静、不受打扰的环境下完成，以确保结果的有效性。
+            </div>
+        </div>
+
+        <!-- 分类筛选按钮 -->
+        <div class="filter-section" id="filterSection">
+            <button class="filter-btn active" data-filter="all" aria-label="显示全部量表">
+                <span class="filter-dot all"></span> 全部量表
+            </button>
+            <button class="filter-btn" data-filter="symptom" aria-label="筛选症状筛查类">
+                <span class="filter-dot symptom"></span> 症状筛查
+            </button>
+            <button class="filter-btn" data-filter="personality" aria-label="筛选人格性格类">
+                <span class="filter-dot personality"></span> 人格性格
+            </button>
+            <button class="filter-btn" data-filter="special" aria-label="筛选专项量表类">
+                <span class="filter-dot special"></span> 专项量表
+            </button>
+        </div>
+
+        <!-- 量表卡片网格 -->
+        <div class="cards-grid" id="cardsGrid">
+            <!-- 卡片由JS动态生成 -->
+        </div>
+
+        <!-- 无结果提示（默认隐藏） -->
+        <div class="no-results" id="noResults" style="display:none;">
+            <div class="no-results-emoji">🔍</div>
+            <p>该分类下暂无量表，请切换筛选条件查看</p>
+        </div>
+
+    </main>
+
+    <!-- ==================== 页脚 ==================== -->
+    <footer class="footer" id="footer">
+        <strong>心灵驿站 - 心理测评中心</strong><br>
+        本站量表来源于公开发表的学术文献与权威心理健康机构资源。<br>
+        测评结果仅供自我参考，<strong>不构成医疗诊断</strong>。如有心理困扰，请咨询专业心理医生或拨打心理援助热线。<br>
+        <span style="color:#b0a8b8;">心理援助热线（中国）：12320-5 / 010-82951332</span>
+    </footer>
+
+    <!-- 回到顶部 -->
+    <button class="back-to-top" id="backToTop" aria-label="回到顶部" title="回到顶部">↑</button>
+
+    <script>
+        (function() {
+            // ==================== 量表数据定义 ====================
+            const scalesData = [{
+                id: 'scl90',
+                name: 'SCL-90 症状自评量表',
+                eng: 'Symptom Checklist 90',
+                category: 'symptom',
+                emoji: '🧠',
+                questions: 90,
+                time: '15-20分钟',
+                desc: '综合评估心理健康状况，涵盖躯体化、强迫症状、人际关系敏感、抑郁、焦虑、敌对、恐怖、偏执、精神病性等10个维度。',
+                link: 'scl90.html',
+                quick: false,
+            }, {
+                id: 'sds',
+                name: 'SDS 抑郁自评量表',
+                eng: 'Self-Rating Depression Scale',
+                category: 'symptom',
+                emoji: '💙',
+                questions: 20,
+                time: '4-6分钟',
+                desc: '简短有效的抑郁情绪筛查工具，评估过去一周内的抑郁相关感受，广泛应用于临床与科研。',
+                link: 'sds.html',
+                quick: true,
+            }, {
+                id: 'sas',
+                name: 'SAS 焦虑自评量表',
+                eng: 'Self-Rating Anxiety Scale',
+                category: 'symptom',
+                emoji: '😰',
+                questions: 20,
+                time: '4-6分钟',
+                desc: '快速评估焦虑情绪水平，了解紧张、担忧、恐惧等焦虑症状的严重程度。',
+                link: 'sas.html',
+                quick: true,
+            }, {
+                id: 'phq9',
+                name: 'PHQ-9 抑郁症筛查量表',
+                eng: 'Patient Health Questionnaire-9',
+                category: 'symptom',
+                emoji: '🌧️',
+                questions: 9,
+                time: '2-3分钟',
+                desc: '国际公认的抑郁症状快速筛查"金标准"，评估过去两周内的情绪状态，简洁高效。',
+                link: 'phq9.html',
+                quick: true,
+            }, {
+                id: 'gad7',
+                name: 'GAD-7 广泛性焦虑障碍量表',
+                eng: 'Generalized Anxiety Disorder-7',
+                category: 'symptom',
+                emoji: '😟',
+                questions: 7,
+                time: '2-3分钟',
+                desc: '7个问题快速筛查广泛性焦虑障碍，评估过度担忧、紧张不安等核心焦虑症状。',
+                link: 'gad7.html',
+                quick: true,
+            }, {
+                id: 'mbti',
+                name: 'MBTI 职业性格测试',
+                eng: 'Myers-Briggs Type Indicator',
+                category: 'personality',
+                emoji: '🔍',
+                questions: '28-93',
+                time: '10-20分钟',
+                desc: '经典的性格类型理论工具，从四个维度探索你的性格偏好，了解自己与他人相处的方式。',
+                link: 'mbti.html',
+                quick: false,
+            }, {
+                id: '16pf',
+                name: '16PF 卡特尔人格问卷',
+                eng: '16 Personality Factors',
+                category: 'personality',
+                emoji: '📊',
+                questions: 187,
+                time: '30-40分钟',
+                desc: '全面深入的16种性格因素测评，涵盖乐群性、稳定性、忧虑性等维度，画像立体丰富。',
+                link: '16pf.html',
+                quick: false,
+            }, {
+                id: 'epq',
+                name: 'EPQ 艾森克人格问卷',
+                eng: 'Eysenck Personality Questionnaire',
+                category: 'personality',
+                emoji: '🎯',
+                questions: 48,
+                time: '8-12分钟',
+                desc: '经典人格理论测评工具，从内外向、神经质、精神质三个维度描绘人格结构。',
+                link: 'epq.html',
+                quick: false,
+            }, {
+                id: 'bdc',
+                name: '伯恩斯抑郁症清单 (BDC)',
+                eng: 'Burns Depression Checklist',
+                category: 'special',
+                emoji: '📝',
+                questions: '约25',
+                time: '4-6分钟',
+                desc: '由David Burns博士设计，帮助识别抑郁思维模式，是国际上常用的抑郁自评工具之一。',
+                link: 'bdc.html',
+                quick: false,
+            }, {
+                id: 'emotion-stability',
+                name: '情绪稳定性测试',
+                eng: 'Emotional Stability Test',
+                category: 'special',
+                emoji: '⚖️',
+                questions: '约25',
+                time: '4-6分钟',
+                desc: '评估情绪调节能力和情绪波动的程度，了解自己在压力情境下的情绪反应模式。',
+                link: 'emotion-stability.html',
+                quick: false,
+            }, {
+                id: 'sccs',
+                name: '自我和谐量表 (SCCS)',
+                eng: 'Self Consistency Scale',
+                category: 'special',
+                emoji: '🕊️',
+                questions: 35,
+                time: '5-8分钟',
+                desc: '测量自我与经验之间的和谐程度，反映内心的协调性与自我接纳水平。',
+                link: 'sccs.html',
+                quick: false,
+            }, {
+                id: 'temperament',
+                name: '气质类型量表',
+                eng: 'Temperament Type Scale',
+                category: 'special',
+                emoji: '🌈',
+                questions: '约60',
+                time: '8-12分钟',
+                desc: '基于经典气质理论，帮助你了解自己属于胆汁质、多血质、黏液质还是抑郁质类型。',
+                link: 'temperament.html',
+                quick: false,
+            }, {
+                id: 'willpower',
+                name: '意志力测试',
+                eng: 'Willpower Assessment',
+                category: 'special',
+                emoji: '💪',
+                questions: '约20',
+                time: '3-5分钟',
+                desc: '评估自控力和意志品质，了解自己在面对诱惑和困难时的坚持能力。',
+                link: 'willpower.html',
+                quick: true,
+            }, ];
+
+            // ==================== DOM引用 ====================
+            const cardsGrid = document.getElementById('cardsGrid');
+            const noResults = document.getElementById('noResults');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const totalCountEl = document.getElementById('totalCount');
+            const backToTopBtn = document.getElementById('backToTop');
+
+            // 更新总数
+            totalCountEl.textContent = scalesData.length;
+
+            // ==================== 渲染卡片 ====================
+            function renderCards(filterCategory = 'all') {
+                const filtered = filterCategory === 'all' ?
+                    scalesData :
+                    scalesData.filter(s => s.category === filterCategory);
+
+                // 清空
+                cardsGrid.innerHTML = '';
+
+                if (filtered.length === 0) {
+                    noResults.style.display = 'block';
+                } else {
+                    noResults.style.display = 'none';
+                    filtered.forEach(scale => {
+                        const cardLink = document.createElement('a');
+                        cardLink.href = scale.link;
+                        cardLink.className = 'card-link';
+                        cardLink.setAttribute('aria-label', `打开${scale.name}`);
+
+                        const tagClass = scale.category;
+                        const quickTag = scale.quick ?
+                            '<span class="card-tag quick">⚡快速筛查</span>' : '';
+                        const questionsDisplay = typeof scale.questions === 'number' ?
+                            `${scale.questions}题` : `${scale.questions}题`;
+
+                        cardLink.innerHTML = `
+                                <div class="card ${tagClass}">
+                                    <div class="card-top">
+                                        <div class="card-emoji ${tagClass}">${scale.emoji}</div>
+                                        <div class="card-title-group">
+                                            <div class="card-title">${scale.name}</div>
+                                            <div class="card-eng">${scale.eng}</div>
+                                        </div>
+                                    </div>
+                                    <div class="card-desc">${scale.desc}</div>
+                                    <div class="card-meta">
+                                        <span>📋 ${questionsDisplay}</span>
+                                        <span>⏱ ${scale.time}</span>
+                                        ${quickTag}
+                                    </div>
+                                    <span class="card-arrow">→</span>
+                                </div>
+                            `;
+                        cardsGrid.appendChild(cardLink);
+                    });
+                }
+            }
+
+            // ==================== 筛选按钮事件 ====================
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const filter = this.getAttribute('data-filter');
+                    // 更新active状态
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    // 渲染
+                    renderCards(filter);
+                    // 滚动到卡片区域
+                    cardsGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            });
+
+            // ==================== 回到顶部按钮 ====================
+            function toggleBackToTop() {
+                if (window.scrollY > 500) {
+                    backToTopBtn.classList.add('visible');
+                } else {
+                    backToTopBtn.classList.remove('visible');
+                }
+            }
+            backToTopBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+            window.addEventListener('scroll', toggleBackToTop, { passive: true });
+
+            // ==================== 键盘筛选可访问性 ====================
+            filterBtns.forEach(btn => {
+                btn.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+            });
+
+            // ==================== 初始渲染 ====================
+            renderCards('all');
+            toggleBackToTop();
+
+            console.log('🧠 心灵驿站 - 心理测评中心已就绪');
+            console.log(`   共收录 ${scalesData.length} 个专业量表`);
+            console.log('   点击任意卡片即可进入对应测评页面');
+            console.log('   ⚠️ 量表结果仅供参考，不构成医疗诊断');
+        })();
+    </script>
+</body>
+</html>
