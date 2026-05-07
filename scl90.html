@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCL-90 症状自评量表 - 心灵驿站</title>
+    <style>
+        :root {
+            --bg: #f7f4f0;
+            --card-bg: #ffffff;
+            --text: #3a3540;
+            --text-secondary: #6b6372;
+            --text-muted: #9a919e;
+            --primary: #5b8c9e;
+            --primary-light: #e8f0f4;
+            --primary-dark: #3d6a7c;
+            --accent: #c97d60;
+            --accent-light: #fdf2ed;
+            --danger: #c0392b;
+            --danger-light: #fdecea;
+            --success: #4a8c6f;
+            --success-light: #eaf5ef;
+            --warning-bg: #fef9f0;
+            --warning-border: #f0d89c;
+            --warning-text: #8b6d3b;
+            --shadow-sm: 0 1px 3px rgba(58, 53, 64, 0.05), 0 1px 2px rgba(58, 53, 64, 0.04);
+            --shadow-md: 0 4px 16px rgba(58, 53, 64, 0.07), 0 2px 6px rgba(58, 53, 64, 0.04);
+            --shadow-lg: 0 8px 30px rgba(58, 53, 64, 0.10), 0 3px 10px rgba(58, 53, 64, 0.05);
+            --radius-sm: 10px;
+            --radius: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 24px;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-sans: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", system-ui, -apple-system,
+                sans-serif;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            background-image:
+                radial-gradient(ellipse at 15% 10%, rgba(91, 140, 158, 0.04) 0%, transparent 55%),
+                radial-gradient(ellipse at 85% 90%, rgba(91, 140, 158, 0.03) 0%, transparent 55%);
+            background-attachment: fixed;
+        }
+
+        /* ========== 顶部导航 ========== */
+        .top-bar {
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(58, 53, 64, 0.06);
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .top-bar-inner {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            color: var(--primary-dark);
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 7px 14px;
+            border-radius: 20px;
+            transition: var(--transition);
+            background: var(--primary-light);
+            white-space: nowrap;
+        }
+        .back-link:hover {
+            background: #d4e6ef;
+            color: #2c5668;
+        }
+        .scale-label {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text);
+            text-align: right;
+            letter-spacing: 0.02em;
+            line-height: 1.3;
+        }
+        .scale-label small {
+            display: block;
+            font-weight: 400;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            letter-spacing: 0.04em;
+        }
+
+        /* ========== 主容器 ========== */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ========== 页面头部 ========== */
+        .page-header {
+            text-align: center;
+            padding: 32px 0 20px;
+        }
+        .page-header h1 {
+            font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+            font-weight: 700;
+            color: #2c2633;
+            letter-spacing: 0.02em;
+            margin-bottom: 6px;
+        }
+        .page-header .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            letter-spacing: 0.03em;
+        }
+
+        /* ========== 进度区域 ========== */
+        .progress-section {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 18px 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(58, 53, 64, 0.05);
+        }
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+        .progress-bar-outer {
+            width: 100%;
+            height: 8px;
+            background: #e8e3ec;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-bar-inner {
+            height: 100%;
+            background: linear-gradient(90deg, #5b8c9e 0%, #7bafc0 100%);
+            border-radius: 10px;
+            transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 0%;
+        }
+        .page-indicator {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+            justify-content: center;
+        }
+        .page-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #d8d2de;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            padding: 0;
+        }
+        .page-dot.completed {
+            background: #a0c4d1;
+        }
+        .page-dot.active {
+            background: var(--primary);
+            width: 22px;
+            border-radius: 10px;
+        }
+
+        /* ========== 答题卡片 ========== */
+        .questions-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 24px 24px 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(58, 53, 64, 0.05);
+            margin-bottom: 16px;
+            min-height: 300px;
+            transition: var(--transition);
+        }
+        .question-item {
+            padding: 14px 0;
+            border-bottom: 1px solid #f0edf3;
+            transition: var(--transition);
+        }
+        .question-item:last-child {
+            border-bottom: none;
+        }
+        .question-item.answered {
+            background: #fdfcfe;
+            margin: 0 -16px;
+            padding-left: 16px;
+            padding-right: 16px;
+            border-radius: 8px;
+        }
+        .question-num {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            font-weight: 700;
+            font-size: 0.75rem;
+            width: 26px;
+            height: 26px;
+            line-height: 26px;
+            text-align: center;
+            border-radius: 50%;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+        .question-text {
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: #2c2633;
+            display: inline;
+            letter-spacing: 0.02em;
+            line-height: 1.5;
+        }
+        .options-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .option-btn {
+            flex: 1;
+            min-width: 58px;
+            padding: 10px 6px;
+            border-radius: 22px;
+            border: 1.5px solid #e0dbe4;
+            background: #fff;
+            cursor: pointer;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: var(--transition);
+            text-align: center;
+            font-family: var(--font-sans);
+            letter-spacing: 0.02em;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            white-space: nowrap;
+        }
+        .option-btn:hover {
+            border-color: #c5bdd0;
+            background: #faf9fb;
+            color: var(--text);
+        }
+        .option-btn.selected {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+            font-weight: 600;
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+        .option-score {
+            display: block;
+            font-size: 0.65rem;
+            font-weight: 400;
+            opacity: 0.75;
+            letter-spacing: 0.04em;
+        }
+        .option-btn.selected .option-score {
+            opacity: 1;
+        }
+
+        /* ========== 导航按钮 ========== */
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+        .nav-btn {
+            padding: 12px 28px;
+            border-radius: 24px;
+            border: 1.5px solid #d8d2de;
+            background: #fff;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+            transition: var(--transition);
+            font-family: var(--font-sans);
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+            box-shadow: var(--shadow-sm);
+            -webkit-tap-highlight-color: transparent;
+        }
+        .nav-btn:hover:not(:disabled) {
+            border-color: #b8b0c0;
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background: #f5f3f7;
+        }
+        .nav-btn.primary {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+        .nav-btn.primary:hover:not(:disabled) {
+            background: #4a7d8f;
+            border-color: #4a7d8f;
+        }
+        .nav-btn.danger {
+            background: #fff;
+            color: var(--danger);
+            border-color: #e8c8c0;
+        }
+        .nav-btn.danger:hover:not(:disabled) {
+            background: var(--danger-light);
+            border-color: #d4a098;
+        }
+        .nav-btn.submit-btn {
+            background: #3d5a4f;
+            color: #fff;
+            border-color: #3d5a4f;
+            font-size: 0.95rem;
+            padding: 14px 36px;
+            letter-spacing: 0.04em;
+        }
+        .nav-btn.submit-btn:hover:not(:disabled) {
+            background: #2f4840;
+            border-color: #2f4840;
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* ========== 结果区域 ========== */
+        .results-section {
+            display: none;
+            background: var(--card-bg);
+            border-radius: var(--radius-xl);
+            padding: 28px 24px 24px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(58, 53, 64, 0.06);
+            margin-bottom: 32px;
+        }
+        .results-section.visible {
+            display: block;
+            animation: fadeInUp 0.45s ease;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .results-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .results-header h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2c2633;
+            letter-spacing: 0.02em;
+        }
+        .results-header .result-date {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+        .result-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .result-stat {
+            background: #faf8fc;
+            border-radius: var(--radius);
+            padding: 16px;
+            text-align: center;
+            border: 1px solid #eeeaf2;
+        }
+        .result-stat .stat-val {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            letter-spacing: -0.02em;
+            line-height: 1;
+        }
+        .result-stat .stat-lbl {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            letter-spacing: 0.03em;
+        }
+        .result-stat.warning .stat-val {
+            color: var(--accent);
+        }
+        .factor-table-wrap {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 16px;
+        }
+        .factor-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+            min-width: 560px;
+        }
+        .factor-table th,
+        .factor-table td {
+            padding: 9px 10px;
+            text-align: center;
+            border-bottom: 1px solid #f0edf3;
+            letter-spacing: 0.02em;
+        }
+        .factor-table th {
+            background: #faf8fc;
+            font-weight: 700;
+            color: #4a4254;
+            font-size: 0.73rem;
+            letter-spacing: 0.04em;
+            position: sticky;
+            top: 0;
+        }
+        .factor-table .factor-name {
+            text-align: left;
+            font-weight: 600;
+            color: #2c2633;
+            white-space: nowrap;
+        }
+        .factor-table .level-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 4px;
+            vertical-align: middle;
+            position: relative;
+            top: -1px;
+        }
+        .level-dot.normal {
+            background: #6aab7c;
+        }
+        .level-dot.mild {
+            background: #d4a843;
+        }
+        .level-dot.moderate {
+            background: #c97d60;
+        }
+        .level-dot.severe {
+            background: #c0392b;
+        }
+        .level-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+        .level-badge.normal {
+            background: #e6f4ea;
+            color: #3d6a4f;
+        }
+        .level-badge.mild {
+            background: #fef6e6;
+            color: #8b6919;
+        }
+        .level-badge.moderate {
+            background: #fef0ea;
+            color: #8b3d1f;
+        }
+        .level-badge.severe {
+            background: #fdecea;
+            color: #8b1a1a;
+        }
+
+        /* ========== 免责声明 ========== */
+        .disclaimer {
+            background: var(--warning-bg);
+            border: 1px solid var(--warning-border);
+            border-radius: var(--radius);
+            padding: 14px 18px;
+            font-size: 0.82rem;
+            color: var(--warning-text);
+            line-height: 1.6;
+            margin-bottom: 24px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        .disclaimer-icon {
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .crisis-alert {
+            background: #fdecea;
+            border: 2px solid #e8b4b0;
+            border-radius: var(--radius);
+            padding: 16px 18px;
+            margin-top: 16px;
+            color: #8b1a1a;
+            font-weight: 500;
+            font-size: 0.85rem;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            line-height: 1.5;
+            animation: subtlePulse 2s ease-in-out infinite;
+        }
+        @keyframes subtlePulse {
+            0%,
+            100% {
+                border-color: #e8b4b0;
+            }
+            50% {
+                border-color: #d4857f;
+            }
+        }
+        .crisis-alert .crisis-icon {
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+
+        /* ========== 页脚 ========== */
+        .footer {
+            text-align: center;
+            padding: 20px 20px 36px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            line-height: 1.7;
+            border-top: 1px solid rgba(58, 53, 64, 0.05);
+        }
+        .footer a {
+            color: var(--primary-dark);
+            text-decoration: none;
+        }
+
+        /* ========== Toast ========== */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #3a3540;
+            color: #fff;
+            padding: 10px 22px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            box-shadow: var(--shadow-lg);
+        }
+        .toast.show {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(-50%) translateY(4px);
+        }
+
+        /* ========== 响应式 ========== */
+        @media (max-width: 600px) {
+            .questions-card {
+                padding: 16px 12px 12px;
+            }
+            .question-item {
+                padding: 10px 0;
+            }
+            .question-text {
+                font-size: 0.85rem;
+            }
+            .option-btn {
+                padding: 8px 4px;
+                font-size: 0.72rem;
+                min-width: 48px;
+                border-radius: 18px;
+            }
+            .option-score {
+                font-size: 0.6rem;
+            }
+            .options-row {
+                gap: 4px;
+            }
+            .nav-btn {
+                padding: 10px 18px;
+                font-size: 0.82rem;
+            }
+            .result-summary {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            .result-stat {
+                padding: 12px 8px;
+            }
+            .result-stat .stat-val {
+                font-size: 1.4rem;
+            }
+            .factor-table {
+                font-size: 0.7rem;
+                min-width: 480px;
+            }
+            .factor-table th,
+            .factor-table td {
+                padding: 6px 6px;
+            }
+            .top-bar-inner {
+                padding: 0 10px;
+                gap: 8px;
+            }
+            .scale-label {
+                font-size: 0.78rem;
+            }
+            .scale-label small {
+                font-size: 0.65rem;
+            }
+            .back-link {
+                font-size: 0.78rem;
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== 顶部导航 ==================== -->
+    <header class="top-bar">
+        <div class="top-bar-inner">
+            <a href="index.html" class="back-link" aria-label="返回量表目录">← 目录</a>
+            <div class="scale-label">
+                SCL-90 症状自评量表
+                <small>Symptom Checklist 90</small>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== 主内容区 ==================== -->
+    <main class="container" id="mainContent">
+        <!-- 页面头部 -->
+        <div class="page-header">
+            <h1>🧠 SCL-90 症状自评量表</h1>
+            <p class="subtitle">评估最近一周的心理健康状况 · 共90题 · 约15-20分钟</p>
+        </div>
+
+        <!-- 进度区域 -->
+        <div class="progress-section" id="progressSection">
+            <div class="progress-info">
+                <span id="progressLabel">第 1 页 / 共 9 页</span>
+                <span id="answeredCount">已答 0 题</span>
+            </div>
+            <div class="progress-bar-outer">
+                <div class="progress-bar-inner" id="progressBar" style="width:0%;"></div>
+            </div>
+            <div class="page-indicator" id="pageDots"></div>
+        </div>
+
+        <!-- 答题卡片 -->
+        <div class="questions-card" id="questionsCard">
+            <!-- 题目由JS动态生成 -->
+        </div>
+
+        <!-- 导航按钮 -->
+        <div class="nav-buttons" id="navButtons">
+            <button class="nav-btn" id="btnPrev" disabled>← 上一页</button>
+            <button class="nav-btn danger" id="btnClear" title="清空当前页答案">🔄 清空本页</button>
+            <button class="nav-btn primary" id="btnNext">下一页 →</button>
+        </div>
+        <div class="nav-buttons" id="submitRow" style="justify-content:center; display:none;">
+            <button class="nav-btn submit-btn" id="btnSubmit" disabled>✅ 提交答卷 · 查看结果</button>
+        </div>
+
+        <!-- 结果区域 -->
+        <div class="results-section" id="resultsSection">
+            <div class="results-header">
+                <h2>📊 测评结果报告</h2>
+                <span class="result-date" id="resultDate"></span>
+            </div>
+            <div class="result-summary" id="resultSummary"></div>
+            <div style="overflow-x:auto;">
+                <div class="factor-table-wrap">
+                    <table class="factor-table" id="factorTable"></table>
+                </div>
+            </div>
+            <div id="crisisAlertContainer"></div>
+            <div class="disclaimer" style="margin-top:16px;">
+                <span class="disclaimer-icon">⚠️</span>
+                <span><strong>重要提醒：</strong>本量表为自我筛查工具，结果仅供自我参考，<strong>不能替代专业心理医生的诊断</strong>。如果你对结果感到担忧，请咨询专业医生或拨打心理援助热线 <strong>12320-5</strong>。</span>
+            </div>
+            <div style="text-align:center;margin-top:16px;">
+                <button class="nav-btn" id="btnRetake" style="margin:0 auto;">🔄 重新测评</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast提示 -->
+    <div class="toast" id="toast"></div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <a href="index.html">← 返回量表目录</a> · 心灵驿站 - 心理测评中心
+    </footer>
+
+    <script>
+        (function() {
+            // ==================== SCL-90 题目数据 ====================
+            const questions = [
+                { id: 1, text: '头痛', factor: '躯体化' },
+                { id: 2, text: '神经过敏，心中不踏实', factor: '焦虑' },
+                { id: 3, text: '头脑中有不必要的想法或字句盘旋', factor: '强迫症状' },
+                { id: 4, text: '头昏或昏倒', factor: '躯体化' },
+                { id: 5, text: '对异性的兴趣减退', factor: '忧郁' },
+                { id: 6, text: '对旁人求全责备', factor: '人际关系敏感' },
+                { id: 7, text: '感到别人能控制你的思想', factor: '精神病性' },
+                { id: 8, text: '责怪别人制造麻烦', factor: '偏执' },
+                { id: 9, text: '记忆力减退', factor: '强迫症状' },
+                { id: 10, text: '担心自己的衣饰整齐及仪态的端正', factor: '强迫症状' },
+                { id: 11, text: '容易烦恼和激动', factor: '敌对' },
+                { id: 12, text: '胸痛', factor: '躯体化' },
+                { id: 13, text: '害怕空旷的场所或街道', factor: '恐怖' },
+                { id: 14, text: '感到自己的精力下降，活动减慢', factor: '忧郁' },
+                { id: 15, text: '想结束自己的生命', factor: '忧郁' },
+                { id: 16, text: '听到旁人听不到的声音', factor: '精神病性' },
+                { id: 17, text: '发抖', factor: '焦虑' },
+                { id: 18, text: '感到大多数人都不可信任', factor: '偏执' },
+                { id: 19, text: '胃口不好', factor: '其他' },
+                { id: 20, text: '容易哭泣', factor: '忧郁' },
+                { id: 21, text: '同异性相处时感到害羞不自在', factor: '人际关系敏感' },
+                { id: 22, text: '感到受骗、中了圈套或有人想抓住你', factor: '忧郁' },
+                { id: 23, text: '无缘无故地突然感到害怕', factor: '焦虑' },
+                { id: 24, text: '自己不能控制地大发脾气', factor: '敌对' },
+                { id: 25, text: '怕单独出门', factor: '恐怖' },
+                { id: 26, text: '经常责怪自己', factor: '忧郁' },
+                { id: 27, text: '腰痛', factor: '躯体化' },
+                { id: 28, text: '感到难以完成任务', factor: '强迫症状' },
+                { id: 29, text: '感到孤独', factor: '忧郁' },
+                { id: 30, text: '感到苦闷', factor: '忧郁' },
+                { id: 31, text: '过分担忧', factor: '忧郁' },
+                { id: 32, text: '对事物不感兴趣', factor: '忧郁' },
+                { id: 33, text: '感到害怕', factor: '焦虑' },
+                { id: 34, text: '你的感情容易受到伤害', factor: '人际关系敏感' },
+                { id: 35, text: '旁人能知道你的私下想法', factor: '精神病性' },
+                { id: 36, text: '感到别人不理解你、不同情你', factor: '人际关系敏感' },
+                { id: 37, text: '感到人们对你不友好、不喜欢你', factor: '人际关系敏感' },
+                { id: 38, text: '做事必须做得很慢以保证做得正确', factor: '强迫症状' },
+                { id: 39, text: '心跳得很厉害', factor: '焦虑' },
+                { id: 40, text: '恶心或胃部不舒服', factor: '躯体化' },
+                { id: 41, text: '感到比不上他人', factor: '人际关系敏感' },
+                { id: 42, text: '肌肉酸痛', factor: '躯体化' },
+                { id: 43, text: '感到有人在监视你、谈论你', factor: '偏执' },
+                { id: 44, text: '难以入睡', factor: '其他' },
+                { id: 45, text: '做事必须反复检查', factor: '强迫症状' },
+                { id: 46, text: '难以做出决定', factor: '强迫症状' },
+                { id: 47, text: '怕乘电车、公共汽车、地铁或火车', factor: '恐怖' },
+                { id: 48, text: '呼吸有困难', factor: '躯体化' },
+                { id: 49, text: '一阵阵发冷或发热', factor: '躯体化' },
+                { id: 50, text: '因为感到害怕而避开某些东西、场合或活动', factor: '恐怖' },
+                { id: 51, text: '脑子变空了', factor: '强迫症状' },
+                { id: 52, text: '身体发麻或刺痛', factor: '躯体化' },
+                { id: 53, text: '喉咙有梗塞感', factor: '躯体化' },
+                { id: 54, text: '感到前途没有希望', factor: '忧郁' },
+                { id: 55, text: '不能集中注意力', factor: '强迫症状' },
+                { id: 56, text: '感到身体的某一部分软弱无力', factor: '躯体化' },
+                { id: 57, text: '感到紧张或容易紧张', factor: '焦虑' },
+                { id: 58, text: '感到手或脚发重', factor: '躯体化' },
+                { id: 59, text: '想到死亡的事', factor: '其他' },
+                { id: 60, text: '吃得太多', factor: '其他' },
+                { id: 61, text: '当别人看着你或谈论你时感到不自在', factor: '人际关系敏感' },
+                { id: 62, text: '有一些不属于你自己的想法', factor: '精神病性' },
+                { id: 63, text: '有想打人或伤害他人的冲动', factor: '敌对' },
+                { id: 64, text: '醒得太早', factor: '其他' },
+                { id: 65, text: '必须反复洗手、清点数目或触摸某些东西', factor: '强迫症状' },
+                { id: 66, text: '睡得不稳不深', factor: '其他' },
+                { id: 67, text: '有想摔坏或破坏东西的冲动', factor: '敌对' },
+                { id: 68, text: '有一些别人没有的想法或念头', factor: '偏执' },
+                { id: 69, text: '感到对别人神经过敏', factor: '人际关系敏感' },
+                { id: 70, text: '在商店或电影院等人多的地方感到不自在', factor: '恐怖' },
+                { id: 71, text: '感到任何事情都很困难', factor: '忧郁' },
+                { id: 72, text: '一阵阵恐惧或惊恐', factor: '焦虑' },
+                { id: 73, text: '感到在公共场合吃东西很不舒服', factor: '人际关系敏感' },
+                { id: 74, text: '经常与人争论', factor: '敌对' },
+                { id: 75, text: '单独一人时神经很紧张', factor: '恐怖' },
+                { id: 76, text: '别人对你的成绩没有作出恰当的评价', factor: '偏执' },
+                { id: 77, text: '即使和别人在一起也感到孤单', factor: '精神病性' },
+                { id: 78, text: '感到坐立不安心神不定', factor: '焦虑' },
+                { id: 79, text: '感到自己没有什么价值', factor: '忧郁' },
+                { id: 80, text: '感到熟悉的东西变得陌生或不像是真的', factor: '焦虑' },
+                { id: 81, text: '大叫或摔东西', factor: '敌对' },
+                { id: 82, text: '害怕会在公共场合晕倒', factor: '恐怖' },
+                { id: 83, text: '感到别人想占你的便宜', factor: '偏执' },
+                { id: 84, text: '为一些有关"性"的想法而很苦恼', factor: '精神病性' },
+                { id: 85, text: '你认为应该因为自己的过错而受到惩罚', factor: '精神病性' },
+                { id: 86, text: '感到要赶快把事情做完', factor: '焦虑' },
+                { id: 87, text: '感到自己的身体有严重问题', factor: '精神病性' },
+                { id: 88, text: '从未感到和其他人很亲近', factor: '精神病性' },
+                { id: 89, text: '感到自己有罪', factor: '其他' },
+                { id: 90, text: '感到自己的脑子有毛病', factor: '精神病性' },
+            ];
+
+            // ==================== 因子定义 ====================
+            const factorDefs = [
+                { name: '躯体化', items: [1, 4, 12, 27, 40, 42, 48, 49, 52, 53, 56, 58] },
+                { name: '强迫症状', items: [3, 9, 10, 28, 38, 45, 46, 51, 55, 65] },
+                { name: '人际关系敏感', items: [6, 21, 34, 36, 37, 41, 61, 69, 73] },
+                { name: '忧郁', items: [5, 14, 15, 20, 22, 26, 29, 30, 31, 32, 54, 71, 79] },
+                { name: '焦虑', items: [2, 17, 23, 33, 39, 57, 72, 78, 80, 86] },
+                { name: '敌对', items: [11, 24, 63, 67, 74, 81] },
+                { name: '恐怖', items: [13, 25, 47, 50, 70, 75, 82] },
+                { name: '偏执', items: [8, 18, 43, 68, 76, 83] },
+                { name: '精神病性', items: [7, 16, 35, 62, 77, 84, 85, 87, 88, 90] },
+                { name: '其他（睡眠饮食）', items: [19, 44, 59, 60, 64, 66, 89] },
+            ];
+
+            const QUESTIONS_PER_PAGE = 10;
+            const TOTAL_PAGES = Math.ceil(questions.length / QUESTIONS_PER_PAGE); // 9页
+
+            // ==================== 状态管理 ====================
+            // answers: { [questionId]: score (1-5) }
+            let answers = {};
+            let currentPage = 1;
+
+            // 尝试从localStorage恢复
+            const savedData = localStorage.getItem('scl90_answers');
+            if (savedData) {
+                try {
+                    const parsed = JSON.parse(savedData);
+                    if (parsed && typeof parsed === 'object') {
+                        answers = parsed;
+                    }
+                } catch (e) {
+                    answers = {};
+                }
+            }
+
+            // ==================== DOM引用 ====================
+            const questionsCard = document.getElementById('questionsCard');
+            const progressBar = document.getElementById('progressBar');
+            const progressLabel = document.getElementById('progressLabel');
+            const answeredCountEl = document.getElementById('answeredCount');
+            const pageDotsEl = document.getElementById('pageDots');
+            const btnPrev = document.getElementById('btnPrev');
+            const btnNext = document.getElementById('btnNext');
+            const btnClear = document.getElementById('btnClear');
+            const btnSubmit = document.getElementById('btnSubmit');
+            const submitRow = document.getElementById('submitRow');
+            const navButtons = document.getElementById('navButtons');
+            const resultsSection = document.getElementById('resultsSection');
+            const resultSummary = document.getElementById('resultSummary');
+            const factorTable = document.getElementById('factorTable');
+            const resultDate = document.getElementById('resultDate');
+            const crisisAlertContainer = document.getElementById('crisisAlertContainer');
+            const btnRetake = document.getElementById('btnRetake');
+            const toast = document.getElementById('toast');
+            const progressSection = document.getElementById('progressSection');
+
+            // ==================== Toast ====================
+            let toastTimer;
+
+            function showToast(msg) {
+                clearTimeout(toastTimer);
+                toast.textContent = msg;
+                toast.classList.add('show');
+                toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
+            }
+
+            // ==================== 保存到localStorage ====================
+            function saveAnswers() {
+                localStorage.setItem('scl90_answers', JSON.stringify(answers));
+            }
+
+            // ==================== 获取题目在数组中的索引 ====================
+            function getQuestionById(id) {
+                return questions.findIndex(q => q.id === id);
+            }
+
+            // ==================== 渲染页面指示器圆点 ====================
+            function renderPageDots() {
+                let html = '';
+                for (let i = 1; i <= TOTAL_PAGES; i++) {
+                    let cls = 'page-dot';
+                    if (i === currentPage) cls += ' active';
+                    // 检查该页是否有任何已回答的题目
+                    const pageStart = (i - 1) * QUESTIONS_PER_PAGE;
+                    const pageEnd = Math.min(i * QUESTIONS_PER_PAGE, questions.length);
+                    let hasAnswer = false;
+                    for (let j = pageStart; j < pageEnd; j++) {
+                        if (answers[questions[j].id] !== undefined) {
+                            hasAnswer = true;
+                            break;
+                        }
+                    }
+                    if (hasAnswer && i !== currentPage) cls += ' completed';
+                    html +=
+                        `<button class="${cls}" data-page="${i}" aria-label="跳转到第${i}页" title="第${i}页"></button>`;
+                }
+                pageDotsEl.innerHTML = html;
+
+                // 绑定点击事件
+                pageDotsEl.querySelectorAll('.page-dot').forEach(dot => {
+                    dot.addEventListener('click', function() {
+                        const targetPage = parseInt(this.getAttribute('data-page'));
+                        if (targetPage !== currentPage) {
+                            currentPage = targetPage;
+                            renderCurrentPage();
+                            scrollToQuestions();
+                        }
+                    });
+                });
+            }
+
+            function scrollToQuestions() {
+                questionsCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                window.scrollBy(0, -80);
+            }
+
+            // ==================== 更新进度 ====================
+            function updateProgress() {
+                const totalAnswered = Object.keys(answers).length;
+                const progressPercent = Math.round((totalAnswered / questions.length) * 100);
+                progressBar.style.width = progressPercent + '%';
+                answeredCountEl.textContent = `已答 ${totalAnswered} 题`;
+                progressLabel.textContent = `第 ${currentPage} 页 / 共 ${TOTAL_PAGES} 页`;
+
+                // 更新导航按钮
+                btnPrev.disabled = currentPage === 1;
+                if (currentPage === TOTAL_PAGES) {
+                    btnNext.style.display = 'none';
+                    submitRow.style.display = 'flex';
+                    navButtons.style.justifyContent = 'space-between';
+                } else {
+                    btnNext.style.display = '';
+                    submitRow.style.display = 'none';
+                    navButtons.style.justifyContent = 'space-between';
+                }
+                btnSubmit.disabled = totalAnswered < questions.length;
+                if (totalAnswered === questions.length && currentPage === TOTAL_PAGES) {
+                    btnSubmit.disabled = false;
+                }
+
+                renderPageDots();
+            }
+
+            // ==================== 渲染当前页题目 ====================
+            function renderCurrentPage() {
+                const startIdx = (currentPage - 1) * QUESTIONS_PER_PAGE;
+                const endIdx = Math.min(startIdx + QUESTIONS_PER_PAGE, questions.length);
+                const pageQuestions = questions.slice(startIdx, endIdx);
+
+                const optionLabels = ['无', '轻度', '中度', '偏重', '严重'];
+                const optionScores = [1, 2, 3, 4, 5];
+
+                let html = '';
+                pageQuestions.forEach((q, idx) => {
+                    const qNum = q.id;
+                    const selectedVal = answers[qNum];
+                    const answeredClass = selectedVal !== undefined ? ' answered' : '';
+                    html += `<div class="question-item${answeredClass}" id="q-item-${qNum}">`;
+                    html +=
+                        `<span class="question-num">${qNum}</span><span class="question-text">${q.text}</span>`;
+                    html += `<div class="options-row" data-qid="${qNum}">`;
+                    for (let i = 0; i < optionLabels.length; i++) {
+                        const score = optionScores[i];
+                        const selClass = (selectedVal === score) ? ' selected' : '';
+                        html += `
+                                <button class="option-btn${selClass}" data-score="${score}" data-qid="${qNum}"
+                                    aria-label="${optionLabels[i]} (${score}分)" title="${optionLabels[i]}">
+                                    ${optionLabels[i]}
+                                    <span class="option-score">${score}分</span>
+                                </button>`;
+                    }
+                    html += `</div></div>`;
+                });
+
+                questionsCard.innerHTML = html;
+                // 滚动到题目卡片顶部
+                questionsCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                window.scrollBy(0, -70);
+
+                // 绑定选项点击事件
+                questionsCard.querySelectorAll('.option-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const qid = parseInt(this.getAttribute('data-qid'));
+                        const score = parseInt(this.getAttribute('data-score'));
+                        // 如果点击已选中的，取消选择
+                        if (answers[qid] === score) {
+                            delete answers[qid];
+                        } else {
+                            answers[qid] = score;
+                        }
+                        saveAnswers();
+                        renderCurrentPage();
+                        updateProgress();
+                    });
+                });
+
+                updateProgress();
+            }
+
+            // ==================== 清空本页 ====================
+            function clearCurrentPage() {
+                const startIdx = (currentPage - 1) * QUESTIONS_PER_PAGE;
+                const endIdx = Math.min(startIdx + QUESTIONS_PER_PAGE, questions.length);
+                let cleared = false;
+                for (let i = startIdx; i < endIdx; i++) {
+                    if (answers[questions[i].id] !== undefined) {
+                        delete answers[questions[i].id];
+                        cleared = true;
+                    }
+                }
+                if (cleared) {
+                    saveAnswers();
+                    showToast('已清空本页答案');
+                } else {
+                    showToast('本页暂无已选答案');
+                }
+                renderCurrentPage();
+                updateProgress();
+            }
+
+            // ==================== 计算因子分 ====================
+            function calcFactorScores() {
+                const factorResults = [];
+                factorDefs.forEach(fd => {
+                    let sum = 0;
+                    let count = 0;
+                    fd.items.forEach(qid => {
+                        if (answers[qid] !== undefined) {
+                            sum += answers[qid];
+                            count++;
+                        }
+                    });
+                    const avg = count > 0 ? sum / count : 0;
+                    factorResults.push({
+                        name: fd.name,
+                        sum: sum,
+                        count: count,
+                        avg: avg,
+                        totalItems: fd.items.length,
+                    });
+                });
+                return factorResults;
+            }
+
+            function getLevelName(avg) {
+                if (avg < 2) return { level: '正常', cls: 'normal' };
+                if (avg < 3) return { level: '轻度', cls: 'mild' };
+                if (avg < 4) return { level: '中度', cls: 'moderate' };
+                return { level: '重度', cls: 'severe' };
+            }
+
+            // ==================== 提交并显示结果 ====================
+            function submitAndShowResults() {
+                const totalAnswered = Object.keys(answers).length;
+                if (totalAnswered < questions.length) {
+                    showToast(`还有 ${questions.length - totalAnswered} 题未回答，请完成全部题目`);
+                    return;
+                }
+
+                // 计算总分
+                let totalScore = 0;
+                questions.forEach(q => {
+                    totalScore += (answers[q.id] || 0);
+                });
+                const totalAvg = totalScore / questions.length;
+
+                // 阳性项目数（分数>=2）
+                let positiveCount = 0;
+                let positiveSum = 0;
+                questions.forEach(q => {
+                    const score = answers[q.id] || 0;
+                    if (score >= 2) {
+                        positiveCount++;
+                        positiveSum += score;
+                    }
+                });
+                const positiveAvg = positiveCount > 0 ? positiveSum / positiveCount : 0;
+
+                // 因子分
+                const factorResults = calcFactorScores();
+
+                // 显示结果区域
+                resultsSection.classList.add('visible');
+                resultDate.textContent = `测评时间：${new Date().toLocaleString('zh-CN')}`;
+
+                // 总分判定
+                const totalWarning = totalScore > 160 || positiveCount > 43;
+                const totalWarningText = totalWarning ?
+                    '（总分偏高，建议进一步关注）' : '（总分在正常范围内）';
+
+                resultSummary.innerHTML = `
+                        <div class="result-stat ${totalWarning ? 'warning' : ''}">
+                            <div class="stat-val">${totalScore}</div>
+                            <div class="stat-lbl">总分 (90-450)</div>
+                        </div>
+                        <div class="result-stat">
+                            <div class="stat-val">${totalAvg.toFixed(2)}</div>
+                            <div class="stat-lbl">总均分</div>
+                        </div>
+                        <div class="result-stat ${totalWarning ? 'warning' : ''}">
+                            <div class="stat-val">${positiveCount}</div>
+                            <div class="stat-lbl">阳性项目数 (≥2分)</div>
+                        </div>
+                        <div class="result-stat">
+                            <div class="stat-val">${positiveAvg.toFixed(2)}</div>
+                            <div class="stat-lbl">阳性症状均分</div>
+                        </div>
+                    `;
+
+                // 因子表格
+                let tableHTML = `
+                        <thead>
+                            <tr>
+                                <th>因子</th>
+                                <th>题目数</th>
+                                <th>因子总分</th>
+                                <th>因子均分</th>
+                                <th>程度</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+                factorResults.forEach(fr => {
+                    const levelInfo = getLevelName(fr.avg);
+                    tableHTML += `
+                            <tr>
+                                <td class="factor-name">${fr.name}</td>
+                                <td>${fr.totalItems}</td>
+                                <td>${fr.sum.toFixed(0)}</td>
+                                <td><strong>${fr.avg.toFixed(2)}</strong></td>
+                                <td><span class="level-badge ${levelInfo.cls}">${levelInfo.level}</span></td>
+                            </tr>`;
+                });
+                tableHTML += `</tbody>`;
+                factorTable.innerHTML = tableHTML;
+
+                // 危机预警：第15题（想结束自己的生命）分数≥3
+                const q15Score = answers[15] || 0;
+                const q59Score = answers[59] || 0;
+                let crisisHTML = '';
+                if (q15Score >= 3 || q59Score >= 4) {
+                    crisisHTML = `
+                            <div class="crisis-alert">
+                                <span class="crisis-icon">🆘</span>
+                                <div>
+                                    <strong>危机提醒：</strong>你在涉及生命意愿或死亡相关题目上得分较高。
+                                    如果你正在经历严重的情绪困扰或有伤害自己的想法，请<strong>立即</strong>寻求帮助。<br>
+                                    📞 <strong>全国心理援助热线：12320-5</strong>　|　📞 <strong>北京心理危机干预中心：010-82951332</strong><br>
+                                    你并不孤单，专业的帮助随时可用。
+                                </div>
+                            </div>`;
+                } else if (q15Score >= 2) {
+                    crisisHTML = `
+                            <div class="crisis-alert" style="background:#fef9f0;border-color:#f0d89c;color:#8b6d3b;animation:none;">
+                                <span class="crisis-icon">⚠️</span>
+                                <div>
+                                    <strong>请留意：</strong>你在涉及生命意愿的题目上有一定程度的得分。建议你关注自己的情绪状态，
+                                    与信任的人交流感受，必要时寻求心理咨询帮助。
+                                </div>
+                            </div>`;
+                }
+                crisisAlertContainer.innerHTML = crisisHTML;
+
+                // 滚动到结果区域
+                resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                window.scrollBy(0, -60);
+
+                // 隐藏答题区域
+                progressSection.style.opacity = '0.5';
+                questionsCard.style.opacity = '0.5';
+                navButtons.style.opacity = '0.5';
+                submitRow.style.opacity = '0.5';
+                questionsCard.style.pointerEvents = 'none';
+                navButtons.style.pointerEvents = 'none';
+                submitRow.style.pointerEvents = 'none';
+
+                saveAnswers();
+            }
+
+            // ==================== 重新测评 ====================
+            function retakeTest() {
+                if (confirm('确定要清除所有答案并重新测评吗？此操作不可恢复。')) {
+                    answers = {};
+                    currentPage = 1;
+                    localStorage.removeItem('scl90_answers');
+                    resultsSection.classList.remove('visible');
+                    progressSection.style.opacity = '1';
+                    questionsCard.style.opacity = '1';
+                    navButtons.style.opacity = '1';
+                    submitRow.style.opacity = '1';
+                    questionsCard.style.pointerEvents = 'auto';
+                    navButtons.style.pointerEvents = 'auto';
+                    submitRow.style.pointerEvents = 'auto';
+                    crisisAlertContainer.innerHTML = '';
+                    renderCurrentPage();
+                    updateProgress();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+
+            // ==================== 事件绑定 ====================
+            btnPrev.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderCurrentPage();
+                    scrollToQuestions();
+                }
+            });
+            btnNext.addEventListener('click', () => {
+                if (currentPage < TOTAL_PAGES) {
+                    currentPage++;
+                    renderCurrentPage();
+                    scrollToQuestions();
+                }
+            });
+            btnClear.addEventListener('click', clearCurrentPage);
+            btnSubmit.addEventListener('click', submitAndShowResults);
+            btnRetake.addEventListener('click', retakeTest);
+
+            // 键盘快捷键
+            document.addEventListener('keydown', function(e) {
+                // 如果结果已显示，不处理
+                if (resultsSection.classList.contains('visible')) return;
+                if (e.key === 'ArrowLeft' && !e.target.closest('input,textarea')) {
+                    e.preventDefault();
+                    if (currentPage > 1) {
+                        currentPage--;
+                        renderCurrentPage();
+                        scrollToQuestions();
+                    }
+                }
+                if (e.key === 'ArrowRight' && !e.target.closest('input,textarea')) {
+                    e.preventDefault();
+                    if (currentPage < TOTAL_PAGES) {
+                        currentPage++;
+                        renderCurrentPage();
+                        scrollToQuestions();
+                    }
+                }
+            });
+
+            // ==================== 初始渲染 ====================
+            renderCurrentPage();
+            updateProgress();
+
+            // 如果已经完成了所有题目，自动显示提交按钮
+            if (Object.keys(answers).length === questions.length && currentPage === TOTAL_PAGES) {
+                btnSubmit.disabled = false;
+            }
+
+            console.log('🧠 SCL-90 症状自评量表已就绪');
+            console.log(`   共 ${questions.length} 题 · ${TOTAL_PAGES} 页 · 每页${QUESTIONS_PER_PAGE}题`);
+            console.log('   评分：1-无 2-轻度 3-中度 4-偏重 5-严重');
+            console.log('   ⚠️ 结果仅供自我参考，不构成医疗诊断');
+            console.log('   💡 提示：使用键盘 ← → 方向键可翻页');
+        })();
+    </script>
+</body>
+</html>
