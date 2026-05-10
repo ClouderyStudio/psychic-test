@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>伯恩斯抑郁症清单 - 心灵驿站</title>
+    <style>
+        :root {
+            --bg: #f7f4f0;
+            --card-bg: #ffffff;
+            --text: #3a3540;
+            --text-secondary: #6b6372;
+            --text-muted: #9a919e;
+            --primary: #5b7a8e;
+            --primary-light: #e8eef3;
+            --primary-dark: #3d5e70;
+            --accent: #c97d60;
+            --accent-light: #fdf2ed;
+            --danger: #c0392b;
+            --danger-light: #fdecea;
+            --success: #4a8c6f;
+            --success-light: #eaf5ef;
+            --warning-bg: #fef9f0;
+            --warning-border: #f0d89c;
+            --warning-text: #8b6d3b;
+            --shadow-sm: 0 1px 3px rgba(58,53,64,0.05),0 1px 2px rgba(58,53,64,0.04);
+            --shadow-md: 0 4px 16px rgba(58,53,64,0.07),0 2px 6px rgba(58,53,64,0.04);
+            --shadow-lg: 0 8px 30px rgba(58,53,64,0.10),0 3px 10px rgba(58,53,64,0.05);
+            --radius-sm: 10px;
+            --radius: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 24px;
+            --transition: 0.25s cubic-bezier(0.4,0,0.2,1);
+            --font-sans: "PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,-apple-system,sans-serif;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior:smooth; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+        body {
+            font-family:var(--font-sans); background-color:var(--bg); color:var(--text); line-height:1.6; min-height:100vh;
+            background-image: radial-gradient(ellipse at 15% 10%, rgba(91,122,142,0.04) 0%, transparent 55%),
+            radial-gradient(ellipse at 85% 90%, rgba(91,122,142,0.03) 0%, transparent 55%);
+            background-attachment:fixed;
+        }
+        .top-bar { background:rgba(255,255,255,0.78); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+            border-bottom:1px solid rgba(58,53,64,0.06); padding:10px 0; position:sticky; top:0; z-index:100; }
+        .top-bar-inner { max-width:1000px; margin:0 auto; padding:0 20px; display:flex; align-items:center;
+            justify-content:space-between; gap:12px; }
+        .back-link { display:inline-flex; align-items:center; gap:6px; text-decoration:none; color:var(--primary-dark);
+            font-weight:600; font-size:0.9rem; padding:7px 14px; border-radius:20px; transition:var(--transition);
+            background:var(--primary-light); white-space:nowrap; }
+        .back-link:hover { background:#d4dde5; color:#2c4a5a; }
+        .scale-label { font-weight:700; font-size:0.95rem; color:var(--text); text-align:right; letter-spacing:0.02em; line-height:1.3; }
+        .scale-label small { display:block; font-weight:400; font-size:0.72rem; color:var(--text-muted); letter-spacing:0.04em; }
+        .container { max-width:850px; margin:0 auto; padding:0 20px; }
+        .page-header { text-align:center; padding:32px 0 20px; }
+        .page-header h1 { font-size:clamp(1.3rem,2.5vw,1.7rem); font-weight:700; color:#2c2633; margin-bottom:6px; }
+        .page-header .subtitle { font-size:0.85rem; color:var(--text-muted); }
+        .progress-section { background:var(--card-bg); border-radius:var(--radius-lg); padding:18px 20px; margin-bottom:16px;
+            box-shadow:var(--shadow-sm); border:1px solid rgba(58,53,64,0.05); }
+        .progress-info { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;
+            font-size:0.82rem; color:var(--text-secondary); font-weight:500; letter-spacing:0.02em; }
+        .progress-bar-outer { width:100%; height:8px; background:#e8e3ec; border-radius:10px; overflow:hidden; }
+        .progress-bar-inner { height:100%; background:linear-gradient(90deg,#5b7a8e 0%,#7a9eb5 100%);
+            border-radius:10px; transition:width 0.35s ease; width:0%; }
+        .questions-card { background:var(--card-bg); border-radius:var(--radius-lg); padding:20px 20px 10px;
+            box-shadow:var(--shadow-sm); border:1px solid rgba(58,53,64,0.05); margin-bottom:16px; }
+        .question-item { padding:12px 0; border-bottom:1px solid #f0edf3; transition:var(--transition); }
+        .question-item:last-child { border-bottom:none; }
+        .question-item.answered { background:#fdfcfe; margin:0 -14px; padding-left:14px; padding-right:14px; border-radius:8px; }
+        .question-num { display:inline-block; background:var(--primary-light); color:var(--primary-dark); font-weight:700;
+            font-size:0.72rem; width:24px; height:24px; line-height:24px; text-align:center; border-radius:50%;
+            margin-right:8px; flex-shrink:0; }
+        .question-text { font-weight:500; font-size:0.9rem; color:#2c2633; display:inline; letter-spacing:0.02em; line-height:1.5; }
+        .options-row { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
+        .option-btn { flex:1; min-width:62px; padding:9px 4px; border-radius:20px; border:1.5px solid #e0dbe4;
+            background:#fff; cursor:pointer; font-size:0.73rem; font-weight:500; color:var(--text-secondary);
+            transition:var(--transition); text-align:center; font-family:var(--font-sans); letter-spacing:0.02em;
+            user-select:none; -webkit-tap-highlight-color:transparent; white-space:nowrap; }
+        .option-btn:hover { border-color:#c5bdd0; background:#faf9fb; color:var(--text); }
+        .option-btn.selected { background:var(--primary); color:#fff; border-color:var(--primary); font-weight:600;
+            box-shadow:var(--shadow-md); transform:translateY(-1px); }
+        .option-score { display:block; font-size:0.6rem; font-weight:400; opacity:0.7; letter-spacing:0.03em; }
+        .option-btn.selected .option-score { opacity:1; }
+        .nav-buttons { display:flex; gap:12px; justify-content:center; margin-bottom:32px; flex-wrap:wrap; }
+        .nav-btn { padding:12px 28px; border-radius:24px; border:1.5px solid #d8d2de; background:#fff; cursor:pointer;
+            font-size:0.9rem; font-weight:600; color:var(--text); transition:var(--transition); font-family:var(--font-sans);
+            letter-spacing:0.03em; white-space:nowrap; box-shadow:var(--shadow-sm); -webkit-tap-highlight-color:transparent; }
+        .nav-btn:hover:not(:disabled) { border-color:#b8b0c0; box-shadow:var(--shadow-md); transform:translateY(-1px); }
+        .nav-btn:disabled { opacity:0.4; cursor:not-allowed; background:#f5f3f7; }
+        .nav-btn.submit-btn { background:#3d5a4f; color:#fff; border-color:#3d5a4f; font-size:0.95rem; padding:14px 36px;
+            letter-spacing:0.04em; }
+        .nav-btn.submit-btn:hover:not(:disabled) { background:#2f4840; border-color:#2f4840; box-shadow:var(--shadow-lg); }
+        .nav-btn.clear-btn { color:var(--danger); border-color:#e8c8c0; }
+        .nav-btn.clear-btn:hover:not(:disabled) { background:var(--danger-light); border-color:#d4a098; }
+        .results-section { display:none; background:var(--card-bg); border-radius:var(--radius-xl); padding:28px 24px;
+            box-shadow:var(--shadow-lg); border:1px solid rgba(58,53,64,0.06); margin-bottom:32px; }
+        .results-section.visible { display:block; animation:fadeInUp 0.45s ease; }
+        @keyframes fadeInUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+        .results-header { text-align:center; margin-bottom:20px; }
+        .results-header h2 { font-size:1.3rem; font-weight:700; color:#2c2633; letter-spacing:0.02em; }
+        .results-header .result-date { font-size:0.78rem; color:var(--text-muted); }
+        .result-summary { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-bottom:20px; }
+        .result-stat { background:#faf8fc; border-radius:var(--radius); padding:16px; text-align:center;
+            border:1px solid #eeeaf2; }
+        .result-stat .stat-val { font-size:1.8rem; font-weight:700; color:var(--primary-dark); letter-spacing:-0.02em;
+            line-height:1; }
+        .result-stat .stat-lbl { font-size:0.72rem; color:var(--text-muted); margin-top:4px; letter-spacing:0.03em; }
+        .result-stat.warning .stat-val { color:var(--accent); }
+        .result-stat.severe .stat-val { color:var(--danger); }
+        .result-level { text-align:center; margin:16px 0; padding:16px; border-radius:var(--radius); font-weight:700;
+            font-size:1.1rem; letter-spacing:0.03em; }
+        .result-level.none { background:#e6f4ea; color:#3d6a4f; }
+        .result-level.mild { background:#fef6e6; color:#8b6919; }
+        .result-level.moderate { background:#fef0ea; color:#8b3d1f; }
+        .result-level.severe { background:#fde8d9; color:#a0441e; }
+        .result-level.extreme { background:#fdecea; color:#8b1a1a; }
+        .disclaimer { background:var(--warning-bg); border:1px solid var(--warning-border); border-radius:var(--radius);
+            padding:14px 18px; font-size:0.82rem; color:var(--warning-text); line-height:1.6; margin-top:16px;
+            display:flex; gap:10px; align-items:flex-start; }
+        .disclaimer-icon { font-size:1.2rem; flex-shrink:0; margin-top:1px; }
+        .crisis-alert { background:#fdecea; border:2px solid #e8b4b0; border-radius:var(--radius); padding:16px 18px;
+            margin-top:16px; color:#8b1a1a; font-weight:500; font-size:0.85rem; display:flex; gap:10px;
+            align-items:flex-start; line-height:1.5; animation:subtlePulse 2s ease-in-out infinite; }
+        @keyframes subtlePulse { 0%,100% { border-color:#e8b4b0; } 50% { border-color:#d4857f; } }
+        .crisis-alert .crisis-icon { font-size:1.4rem; flex-shrink:0; }
+        .footer { text-align:center; padding:20px 20px 36px; color:var(--text-muted); font-size:0.75rem; line-height:1.7;
+            border-top:1px solid rgba(58,53,64,0.05); }
+        .footer a { color:var(--primary-dark); text-decoration:none; }
+        .toast { position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#3a3540; color:#fff;
+            padding:10px 22px; border-radius:20px; font-size:0.85rem; font-weight:600; letter-spacing:0.03em;
+            z-index:200; opacity:0; pointer-events:none; transition:opacity 0.3s ease, transform 0.3s ease;
+            box-shadow:var(--shadow-lg); }
+        .toast.show { opacity:1; pointer-events:auto; transform:translateX(-50%) translateY(4px); }
+        @media (max-width:600px) {
+            .questions-card { padding:14px 10px 8px; }
+            .question-item { padding:9px 0; }
+            .question-text { font-size:0.82rem; }
+            .option-btn { padding:7px 3px; font-size:0.68rem; min-width:48px; border-radius:16px; }
+            .option-score { font-size:0.55rem; }
+            .options-row { gap:4px; }
+            .nav-btn { padding:10px 18px; font-size:0.82rem; }
+            .result-summary { grid-template-columns:repeat(2,1fr); gap:8px; }
+            .result-stat { padding:12px 8px; }
+            .result-stat .stat-val { font-size:1.4rem; }
+            .top-bar-inner { padding:0 10px; gap:8px; }
+            .back-link { font-size:0.78rem; padding:6px 10px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="top-bar">
+        <div class="top-bar-inner">
+            <a href="index.html" class="back-link" aria-label="返回量表目录">← 目录</a>
+            <div class="scale-label">
+                伯恩斯抑郁症清单 (BDC)
+                <small>Burns Depression Checklist</small>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h1>📝 伯恩斯抑郁症清单 (BDC)</h1>
+            <p class="subtitle">评估最近一周的情绪与行为状态 · 共25题 · 约4-6分钟</p>
+        </div>
+
+        <div class="progress-section" id="progressSection">
+            <div class="progress-info">
+                <span>请根据最近一周内以下情况出现的频率进行选择</span>
+                <span id="answeredCount">已答 0 题</span>
+            </div>
+            <div class="progress-bar-outer">
+                <div class="progress-bar-inner" id="progressBar" style="width:0%;"></div>
+            </div>
+            <div style="font-size:0.7rem;color:var(--text-muted);margin-top:6px;">
+                评分标准：0=无 1=轻度 2=中度 3=重度 4=极重度
+            </div>
+        </div>
+
+        <div class="questions-card" id="questionsCard"></div>
+
+        <div class="nav-buttons" id="navButtons">
+            <button class="nav-btn clear-btn" id="btnClear">🔄 清空全部答案</button>
+            <button class="nav-btn submit-btn" id="btnSubmit" disabled>✅ 提交答卷 · 查看结果</button>
+        </div>
+
+        <div class="results-section" id="resultsSection">
+            <div class="results-header">
+                <h2>📊 测评结果报告</h2>
+                <span class="result-date" id="resultDate"></span>
+            </div>
+            <div class="result-summary" id="resultSummary"></div>
+            <div id="resultLevelContainer"></div>
+            <div id="crisisAlertContainer"></div>
+            <div class="disclaimer">
+                <span class="disclaimer-icon">⚠️</span>
+                <span><strong>重要提醒：</strong>本清单由David Burns博士设计，为抑郁症状自我筛查工具。结果仅供自我参考，<strong>不能替代专业心理医生的诊断</strong>。如果你对结果感到担忧，请咨询专业医生或拨打心理援助热线 <strong>12320-5</strong>。</span>
+            </div>
+            <div style="text-align:center;margin-top:16px;">
+                <button class="nav-btn" id="btnRetake">🔄 重新测评</button>
+            </div>
+        </div>
+    </main>
+
+    <div class="toast" id="toast"></div>
+
+    <footer class="footer">
+        <a href="index.html">← 返回量表目录</a> · 心灵驿站 - 心理测评中心
+    </footer>
+
+    <script>
+        (function() {
+            // BDC 题目数据 (25题)
+            const questions = [
+                { id:1,  text:'感到悲伤或情绪低落' },
+                { id:2,  text:'对未来感到悲观或绝望' },
+                { id:3,  text:'觉得自己是个失败者，一事无成' },
+                { id:4,  text:'对过去喜欢的事物失去了兴趣或乐趣' },
+                { id:5,  text:'感到内疚或羞愧' },
+                { id:6,  text:'觉得自己正在受到惩罚' },
+                { id:7,  text:'对自己感到厌恶或失望' },
+                { id:8,  text:'觉得自己比别人差，或总爱责备自己' },
+                { id:9,  text:'有自杀的念头或想法' },
+                { id:10, text:'比以前更容易哭泣' },
+                { id:11, text:'感到烦躁、沮丧或愤怒' },
+                { id:12, text:'对其他人或活动失去了兴趣' },
+                { id:13, text:'难以做出决定' },
+                { id:14, text:'觉得自己变得丑陋或没有吸引力' },
+                { id:15, text:'工作或学习时感到吃力' },
+                { id:16, text:'睡眠困难（入睡困难、早醒或睡眠过多）' },
+                { id:17, text:'感到疲倦或缺乏精力' },
+                { id:18, text:'食欲变化（食欲不振或暴饮暴食）' },
+                { id:19, text:'体重明显变化（增加或减少）' },
+                { id:20, text:'过度担心自己的身体健康' },
+                { id:21, text:'对性的兴趣减退' },
+                { id:22, text:'感到孤独，即使和别人在一起' },
+                { id:23, text:'对未来看不到希望' },
+                { id:24, text:'经常批评或责备自己' },
+                { id:25, text:'做任何事情都缺乏动力' }
+            ];
+
+            // 选项：0-4分
+            const options = [
+                { value:0, label:'无', desc:'完全没有' },
+                { value:1, label:'轻度', desc:'偶尔出现' },
+                { value:2, label:'中度', desc:'经常出现' },
+                { value:3, label:'重度', desc:'大部分时间' },
+                { value:4, label:'极重度', desc:'持续不断' }
+            ];
+
+            // 状态管理
+            let answers = {}; // { questionId: score (0-4) }
+            const saved = localStorage.getItem('bdc_answers');
+            if(saved) { try { const p=JSON.parse(saved); if(p&&typeof p==='object') answers=p; } catch(e) { answers={}; } }
+
+            const questionsCard = document.getElementById('questionsCard');
+            const progressBar = document.getElementById('progressBar');
+            const answeredCountEl = document.getElementById('answeredCount');
+            const btnSubmit = document.getElementById('btnSubmit');
+            const btnClear = document.getElementById('btnClear');
+            const navButtons = document.getElementById('navButtons');
+            const resultsSection = document.getElementById('resultsSection');
+            const resultSummary = document.getElementById('resultSummary');
+            const resultLevelContainer = document.getElementById('resultLevelContainer');
+            const resultDate = document.getElementById('resultDate');
+            const crisisAlertContainer = document.getElementById('crisisAlertContainer');
+            const btnRetake = document.getElementById('btnRetake');
+            const toast = document.getElementById('toast');
+            const progressSection = document.getElementById('progressSection');
+
+            let toastTimer;
+            function showToast(msg) {
+                clearTimeout(toastTimer);
+                toast.textContent = msg;
+                toast.classList.add('show');
+                toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
+            }
+
+            function saveAnswers() { localStorage.setItem('bdc_answers', JSON.stringify(answers)); }
+
+            function renderQuestions() {
+                let html = '';
+                questions.forEach(q => {
+                    const selected = answers[q.id];
+                    const isAnswered = selected !== undefined;
+                    const answeredClass = isAnswered ? ' answered' : '';
+                    html += `<div class="question-item${answeredClass}">`;
+                    html += `<span class="question-num">${q.id}</span><span class="question-text">${q.text}</span>`;
+                    html += `<div class="options-row">`;
+                    options.forEach(opt => {
+                        const selClass = (isAnswered && selected === opt.value) ? ' selected' : '';
+                        html += `<button class="option-btn${selClass}" data-score="${opt.value}" data-qid="${q.id}" aria-label="${opt.label}">
+                                    ${opt.label}<span class="option-score">${opt.value}分</span></button>`;
+                    });
+                    html += `</div></div>`;
+                });
+                questionsCard.innerHTML = html;
+
+                questionsCard.querySelectorAll('.option-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const qid = parseInt(this.getAttribute('data-qid'));
+                        const score = parseInt(this.getAttribute('data-score'));
+                        if (answers[qid] === score) {
+                            delete answers[qid];
+                        } else {
+                            answers[qid] = score;
+                        }
+                        saveAnswers();
+                        renderQuestions();
+                        updateProgress();
+                    });
+                });
+                updateProgress();
+            }
+
+            function updateProgress() {
+                const total = questions.length;
+                const answered = Object.keys(answers).length;
+                const pct = Math.round((answered / total) * 100);
+                progressBar.style.width = pct + '%';
+                answeredCountEl.textContent = `已答 ${answered} 题`;
+                btnSubmit.disabled = answered < total;
+            }
+
+            function clearAll() {
+                if(Object.keys(answers).length === 0) { showToast('暂无已选答案'); return; }
+                if(confirm('确定要清空全部已选答案吗？此操作不可恢复。')) {
+                    answers = {};
+                    saveAnswers();
+                    renderQuestions();
+                    updateProgress();
+                    showToast('已清空全部答案');
+                }
+            }
+
+            function calcLevel(totalScore) {
+                if (totalScore >= 0 && totalScore <= 10) return { text:'正常范围，无明显抑郁症状', class:'none' };
+                if (totalScore >= 11 && totalScore <= 25) return { text:'轻度抑郁', class:'mild' };
+                if (totalScore >= 26 && totalScore <= 50) return { text:'中度抑郁', class:'moderate' };
+                if (totalScore >= 51 && totalScore <= 75) return { text:'重度抑郁', class:'severe' };
+                return { text:'极重度抑郁', class:'extreme' };
+            }
+
+            function submitAndShow() {
+                const total = questions.length;
+                const answered = Object.keys(answers).length;
+                if(answered < total) { showToast(`还有 ${total - answered} 题未回答，请完成全部题目`); return; }
+
+                let totalScore = 0;
+                questions.forEach(q => { totalScore += (answers[q.id] || 0); });
+
+                const level = calcLevel(totalScore);
+                const maxScore = questions.length * 4; // 100
+                const warning = totalScore >= 11;
+
+                resultsSection.classList.add('visible');
+                resultDate.textContent = `测评时间：${new Date().toLocaleString('zh-CN')}`;
+
+                let statClass = '';
+                if (totalScore >= 51) statClass = ' severe';
+                else if (totalScore >= 11) statClass = ' warning';
+
+                resultSummary.innerHTML = `
+                    <div class="result-stat${statClass}">
+                        <div class="stat-val">${totalScore}</div>
+                        <div class="stat-lbl">总分 (0-${maxScore})</div>
+                    </div>
+                    <div class="result-stat">
+                        <div class="stat-val">${answered}</div>
+                        <div class="stat-lbl">完成题目</div>
+                    </div>
+                    <div class="result-stat">
+                        <div class="stat-val">${(totalScore/maxScore*100).toFixed(0)}%</div>
+                        <div class="stat-lbl">得分百分比</div>
+                    </div>`;
+                resultLevelContainer.innerHTML = `<div class="result-level ${level.class}">${level.text}</div>`;
+
+                // 危机预警：第9题（自杀念头）得分>=2
+                const q9 = answers[9] || 0;
+                let crisisHTML = '';
+                if(q9 >= 2) {
+                    crisisHTML = `<div class="crisis-alert"><span class="crisis-icon">🆘</span><div>
+                        <strong>危机提醒：</strong>你提到有自杀的念头或想法，且频率较高。请务必重视这个信号，
+                        我们强烈建议你<strong>立即</strong>与信任的人交流，或联系专业心理援助。<br>
+                        📞 <strong>全国心理援助热线：12320-5</strong>　|　📞 <strong>北京心理危机干预中心：010-82951332</strong><br>
+                        你并不孤单，及时的帮助可以带来改变。</div></div>`;
+                } else if(q9 === 1) {
+                    crisisHTML = `<div class="crisis-alert" style="background:#fef9f0;border-color:#f0d89c;color:#8b6d3b;animation:none;">
+                        <span class="crisis-icon">⚠️</span><div>
+                        <strong>请留意：</strong>你提到偶尔有自杀的念头。建议你关注自己的情绪状态，与信任的人交流感受，
+                        如有需要请寻求心理咨询帮助。</div></div>`;
+                }
+                crisisAlertContainer.innerHTML = crisisHTML;
+
+                // 锁定作答区域
+                progressSection.style.opacity = '0.5';
+                questionsCard.style.opacity = '0.5';
+                navButtons.style.opacity = '0.5';
+                questionsCard.style.pointerEvents = 'none';
+                navButtons.style.pointerEvents = 'none';
+
+                saveAnswers();
+                resultsSection.scrollIntoView({ behavior:'smooth', block:'start' });
+                window.scrollBy(0, -60);
+            }
+
+            function retakeTest() {
+                if(confirm('确定要清除所有答案并重新测评吗？')) {
+                    answers = {};
+                    localStorage.removeItem('bdc_answers');
+                    resultsSection.classList.remove('visible');
+                    progressSection.style.opacity = '1';
+                    questionsCard.style.opacity = '1';
+                    navButtons.style.opacity = '1';
+                    questionsCard.style.pointerEvents = 'auto';
+                    navButtons.style.pointerEvents = 'auto';
+                    crisisAlertContainer.innerHTML = '';
+                    resultLevelContainer.innerHTML = '';
+                    renderQuestions();
+                    updateProgress();
+                    window.scrollTo({ top:0, behavior:'smooth' });
+                }
+            }
+
+            btnClear.addEventListener('click', clearAll);
+            btnSubmit.addEventListener('click', submitAndShow);
+            btnRetake.addEventListener('click', retakeTest);
+
+            renderQuestions();
+            updateProgress();
+
+            console.log('📝 伯恩斯抑郁症清单 (BDC) 已就绪 · 25题 · 总分0-100');
+            console.log('   评分：0=无 1=轻度 2=中度 3=重度 4=极重度');
+            console.log('   ⚠️ 结果仅供自我参考，不构成医疗诊断');
+        })();
+    </script>
+</body>
+</html>

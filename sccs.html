@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCCS 自我和谐量表 - 心灵驿站</title>
+    <style>
+        :root {
+            --bg: #f7f4f0;
+            --card-bg: #ffffff;
+            --text: #3a3540;
+            --text-secondary: #6b6372;
+            --text-muted: #9a919e;
+            --primary: #5e8c6f;
+            --primary-light: #eaf5ee;
+            --primary-dark: #3d6a4f;
+            --accent: #c97d60;
+            --accent-light: #fdf2ed;
+            --danger: #c0392b;
+            --danger-light: #fdecea;
+            --warm: #d4a843;
+            --warm-light: #fef9f0;
+            --shadow-sm: 0 1px 3px rgba(58, 53, 64, 0.05), 0 1px 2px rgba(58, 53, 64, 0.04);
+            --shadow-md: 0 4px 16px rgba(58, 53, 64, 0.07), 0 2px 6px rgba(58, 53, 64, 0.04);
+            --shadow-lg: 0 8px 30px rgba(58, 53, 64, 0.10), 0 3px 10px rgba(58, 53, 64, 0.05);
+            --radius-sm: 10px;
+            --radius: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 24px;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-sans: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", system-ui, -apple-system,
+                sans-serif;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            background-image:
+                radial-gradient(ellipse at 15% 10%, rgba(94, 140, 111, 0.04) 0%, transparent 55%),
+                radial-gradient(ellipse at 85% 90%, rgba(94, 140, 111, 0.03) 0%, transparent 55%);
+            background-attachment: fixed;
+        }
+        .top-bar {
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(58, 53, 64, 0.06);
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .top-bar-inner {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            color: var(--primary-dark);
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 7px 14px;
+            border-radius: 20px;
+            transition: var(--transition);
+            background: var(--primary-light);
+            white-space: nowrap;
+        }
+        .back-link:hover {
+            background: #d4e8d9;
+            color: #2d5a40;
+        }
+        .scale-label {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text);
+            text-align: right;
+            letter-spacing: 0.02em;
+            line-height: 1.3;
+        }
+        .scale-label small {
+            display: block;
+            font-weight: 400;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            letter-spacing: 0.04em;
+        }
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .page-header {
+            text-align: center;
+            padding: 32px 0 20px;
+        }
+        .page-header h1 {
+            font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+            font-weight: 700;
+            color: #2c2633;
+            margin-bottom: 6px;
+        }
+        .page-header .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .progress-section {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 18px 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(58, 53, 64, 0.05);
+        }
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        .progress-bar-outer {
+            width: 100%;
+            height: 8px;
+            background: #e8e3ec;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-bar-inner {
+            height: 100%;
+            background: linear-gradient(90deg, #5e8c6f 0%, #7baf90 100%);
+            border-radius: 10px;
+            transition: width 0.35s ease;
+            width: 0%;
+        }
+        .questions-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 24px 24px 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(58, 53, 64, 0.05);
+            margin-bottom: 16px;
+        }
+        .question-item {
+            padding: 14px 0;
+            border-bottom: 1px solid #f0edf3;
+            transition: var(--transition);
+        }
+        .question-item:last-child {
+            border-bottom: none;
+        }
+        .question-item.answered {
+            background: #fdfcfe;
+            margin: 0 -16px;
+            padding-left: 16px;
+            padding-right: 16px;
+            border-radius: 8px;
+        }
+        .question-num {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            font-weight: 700;
+            font-size: 0.72rem;
+            width: 24px;
+            height: 24px;
+            line-height: 24px;
+            text-align: center;
+            border-radius: 50%;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+        .question-text {
+            font-weight: 500;
+            font-size: 0.92rem;
+            color: #2c2633;
+            display: inline;
+            letter-spacing: 0.02em;
+            line-height: 1.5;
+        }
+        .reverse-badge {
+            display: inline-block;
+            background: #f2eef6;
+            color: #7b6b8e;
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            padding: 2px 7px;
+            border-radius: 10px;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+        .dim-badge {
+            display: inline-block;
+            font-size: 0.58rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            padding: 2px 6px;
+            border-radius: 8px;
+            margin-left: 4px;
+            vertical-align: middle;
+        }
+        .dim-badge.disharmony {
+            background: #fef0ea;
+            color: #8b3d1f;
+        }
+        .dim-badge.flexibility {
+            background: #eaf5ee;
+            color: #3d6a4f;
+        }
+        .dim-badge.rigidity {
+            background: #fef6e6;
+            color: #8b6919;
+        }
+        .options-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .option-btn {
+            flex: 1;
+            min-width: 62px;
+            padding: 9px 4px;
+            border-radius: 20px;
+            border: 1.5px solid #e0dbe4;
+            background: #fff;
+            cursor: pointer;
+            font-size: 0.73rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: var(--transition);
+            text-align: center;
+            font-family: var(--font-sans);
+            letter-spacing: 0.02em;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            white-space: nowrap;
+        }
+        .option-btn:hover {
+            border-color: #c5bdd0;
+            background: #faf9fb;
+            color: var(--text);
+        }
+        .option-btn.selected {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+            font-weight: 600;
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+        .option-score {
+            display: block;
+            font-size: 0.58rem;
+            font-weight: 400;
+            opacity: 0.7;
+            letter-spacing: 0.03em;
+        }
+        .option-btn.selected .option-score {
+            opacity: 1;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+        .nav-btn {
+            padding: 12px 28px;
+            border-radius: 24px;
+            border: 1.5px solid #d8d2de;
+            background: #fff;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+            transition: var(--transition);
+            font-family: var(--font-sans);
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+            box-shadow: var(--shadow-sm);
+            -webkit-tap-highlight-color: transparent;
+        }
+        .nav-btn:hover:not(:disabled) {
+            border-color: #b8b0c0;
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background: #f5f3f7;
+        }
+        .nav-btn.submit-btn {
+            background: var(--primary-dark);
+            color: #fff;
+            border-color: var(--primary-dark);
+            font-size: 0.95rem;
+            padding: 14px 36px;
+            letter-spacing: 0.04em;
+        }
+        .nav-btn.submit-btn:hover:not(:disabled) {
+            background: #2d5a40;
+            border-color: #2d5a40;
+            box-shadow: var(--shadow-lg);
+        }
+        .nav-btn.clear-btn {
+            color: var(--danger);
+            border-color: #e8c8c0;
+        }
+        .nav-btn.clear-btn:hover:not(:disabled) {
+            background: var(--danger-light);
+            border-color: #d4a098;
+        }
+        .results-section {
+            display: none;
+            background: var(--card-bg);
+            border-radius: var(--radius-xl);
+            padding: 28px 24px 24px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(58, 53, 64, 0.06);
+            margin-bottom: 32px;
+        }
+        .results-section.visible {
+            display: block;
+            animation: fadeInUp 0.45s ease;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .results-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .results-header h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2c2633;
+            letter-spacing: 0.02em;
+        }
+        .results-header .result-date {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+        .dimension-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+        .dim-card {
+            border-radius: var(--radius);
+            padding: 16px;
+            text-align: center;
+            border: 1px solid rgba(58, 53, 64, 0.08);
+            transition: var(--transition);
+        }
+        .dim-card.disharmony {
+            background: #fef9f7;
+            border-color: #f5dbd0;
+        }
+        .dim-card.flexibility {
+            background: #f7fbf8;
+            border-color: #d0e8d6;
+        }
+        .dim-card.rigidity {
+            background: #fefcf6;
+            border-color: #f0e0b8;
+        }
+        .dim-card .dim-icon {
+            font-size: 1.6rem;
+            margin-bottom: 4px;
+        }
+        .dim-card .dim-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #2c2633;
+            letter-spacing: 0.02em;
+        }
+        .dim-card .dim-score {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin: 6px 0;
+        }
+        .dim-card .dim-range {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+        }
+        .dim-card .dim-desc {
+            font-size: 0.73rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-top: 6px;
+        }
+        .harmony-overview {
+            background: #faf8fc;
+            border-radius: var(--radius);
+            padding: 18px;
+            text-align: center;
+            border: 1px solid #eeeaf2;
+            margin: 16px 0;
+        }
+        .harmony-overview .harmony-level {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 6px 0;
+        }
+        .harmony-overview .harmony-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .disclaimer {
+            background: var(--warm-light);
+            border: 1px solid #f0d89c;
+            border-radius: var(--radius);
+            padding: 14px 18px;
+            font-size: 0.82rem;
+            color: #8b6d3b;
+            line-height: 1.6;
+            margin-top: 16px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        .disclaimer-icon {
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px 20px 36px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            line-height: 1.7;
+            border-top: 1px solid rgba(58, 53, 64, 0.05);
+        }
+        .footer a {
+            color: var(--primary-dark);
+            text-decoration: none;
+        }
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #3a3540;
+            color: #fff;
+            padding: 10px 22px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            box-shadow: var(--shadow-lg);
+        }
+        .toast.show {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(-50%) translateY(4px);
+        }
+        @media (max-width: 600px) {
+            .questions-card {
+                padding: 14px 10px 8px;
+            }
+            .question-item {
+                padding: 9px 0;
+            }
+            .question-text {
+                font-size: 0.82rem;
+            }
+            .option-btn {
+                padding: 7px 3px;
+                font-size: 0.68rem;
+                min-width: 48px;
+                border-radius: 16px;
+            }
+            .option-score {
+                font-size: 0.55rem;
+            }
+            .options-row {
+                gap: 4px;
+            }
+            .nav-btn {
+                padding: 10px 18px;
+                font-size: 0.82rem;
+            }
+            .dimension-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .top-bar-inner {
+                padding: 0 10px;
+                gap: 8px;
+            }
+            .back-link {
+                font-size: 0.78rem;
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="top-bar">
+        <div class="top-bar-inner">
+            <a href="index.html" class="back-link" aria-label="返回量表目录">← 目录</a>
+            <div class="scale-label">
+                SCCS 自我和谐量表
+                <small>Self Consistency and Congruence Scale</small>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h1>🕊️ 自我和谐量表 (SCCS)</h1>
+            <p class="subtitle">评估自我与经验之间的一致性、灵活性与刻板性 · 共35题 · 约6-10分钟</p>
+        </div>
+
+        <div class="progress-section" id="progressSection">
+            <div class="progress-info">
+                <span>请根据你的真实感受，选择最符合的一项</span>
+                <span id="answeredCount">已答 0 题</span>
+            </div>
+            <div class="progress-bar-outer">
+                <div class="progress-bar-inner" id="progressBar" style="width:0%;"></div>
+            </div>
+            <div style="font-size:0.68rem;color:var(--text-muted);margin-top:6px;line-height:1.5;">
+                <span class="dim-badge disharmony">不和谐</span> 自我与经验的不一致 ·
+                <span class="dim-badge flexibility">灵活性</span> 自我调节的灵活程度（反向计分）·
+                <span class="dim-badge rigidity">刻板性</span> 自我概念的固守倾向
+            </div>
+        </div>
+
+        <div class="questions-card" id="questionsCard"></div>
+
+        <div class="nav-buttons" id="navButtons">
+            <button class="nav-btn clear-btn" id="btnClear">🔄 清空全部答案</button>
+            <button class="nav-btn submit-btn" id="btnSubmit" disabled>✅ 提交答卷 · 查看结果</button>
+        </div>
+
+        <div class="results-section" id="resultsSection">
+            <div class="results-header">
+                <h2>🧘 自我和谐测评结果</h2>
+                <span class="result-date" id="resultDate"></span>
+            </div>
+            <div class="dimension-grid" id="dimensionGrid"></div>
+            <div class="harmony-overview" id="harmonyOverview"></div>
+            <div class="disclaimer">
+                <span class="disclaimer-icon">⚠️</span>
+                <span><strong>重要提醒：</strong>本量表为自我和谐度自评工具，结果仅供自我了解和成长参考，<strong>不能替代专业心理评估</strong>。自我和谐是一个动态发展的过程，请以开放和接纳的态度看待测评结果。</span>
+            </div>
+            <div style="text-align:center;margin-top:16px;">
+                <button class="nav-btn" id="btnRetake">🔄 重新测评</button>
+            </div>
+        </div>
+    </main>
+
+    <div class="toast" id="toast"></div>
+
+    <footer class="footer">
+        <a href="index.html">← 返回量表目录</a> · 心灵驿站 - 心理测评中心
+    </footer>
+
+    <script>
+        (function() {
+            // SCCS 题目数据 (35题)
+            const questions = [
+                // 维度1：自我与经验的不和谐 (16题) - 正向计分
+                { id: 1, text: '我经常觉得自己的表现不如别人', dim: 'disharmony', reverse: false },
+                { id: 2, text: '有时候我会对自己产生怀疑', dim: 'disharmony', reverse: false },
+                { id: 3, text: '我觉得别人对我的看法和我对自己的看法不太一样', dim: 'disharmony', reverse: false },
+                { id: 4, text: '我经常为自己的决定感到后悔', dim: 'disharmony', reverse: false },
+                { id: 5, text: '我觉得自己不够了解自己', dim: 'disharmony', reverse: false },
+                { id: 6, text: '面对困难时，我常常不知道如何是好', dim: 'disharmony', reverse: false },
+                { id: 7, text: '我经常觉得内心很矛盾', dim: 'disharmony', reverse: false },
+                { id: 8, text: '我觉得自己的能力没有得到充分发挥', dim: 'disharmony', reverse: false },
+                { id: 9, text: '有时候我会做一些连自己都不理解的事情', dim: 'disharmony', reverse: false },
+                { id: 10, text: '我常常担心别人怎么看我', dim: 'disharmony', reverse: false },
+                { id: 11, text: '我觉得自己的情绪很难控制', dim: 'disharmony', reverse: false },
+                { id: 12, text: '有时候我觉得自己不是真正的自己', dim: 'disharmony', reverse: false },
+                { id: 13, text: '我对自己的评价经常改变', dim: 'disharmony', reverse: false },
+                { id: 14, text: '我觉得自己不够自信', dim: 'disharmony', reverse: false },
+                { id: 15, text: '很多时候我不确定自己真正想要什么', dim: 'disharmony', reverse: false },
+                { id: 16, text: '我对自己的某些方面感到不满意', dim: 'disharmony', reverse: false },
+
+                // 维度2：自我的灵活性 (12题) - 反向计分
+                { id: 17, text: '即使情况变得很糟糕，我也能找到应对的办法', dim: 'flexibility', reverse: true },
+                { id: 18, text: '面对批评，我能够虚心接受并加以改进', dim: 'flexibility', reverse: true },
+                { id: 19, text: '当计划被打乱时，我能很快调整过来', dim: 'flexibility', reverse: true },
+                { id: 20, text: '我愿意尝试用不同的方法解决问题', dim: 'flexibility', reverse: true },
+                { id: 21, text: '遭遇失败后，我能从中吸取教训并继续前进', dim: 'flexibility', reverse: true },
+                { id: 22, text: '我能够理解与自己不同的观点', dim: 'flexibility', reverse: true },
+                { id: 23, text: '环境变化时，我能较快适应', dim: 'flexibility', reverse: true },
+                { id: 24, text: '面对压力时，我能找到放松的方式', dim: 'flexibility', reverse: true },
+                { id: 25, text: '我愿意改变自己来适应新的情况', dim: 'flexibility', reverse: true },
+                { id: 26, text: '遇到困难时，我会主动寻求帮助', dim: 'flexibility', reverse: true },
+                { id: 27, text: '我能够从多个角度看待问题', dim: 'flexibility', reverse: true },
+                { id: 28, text: '即使事情没有按预期发展，我也能保持平和心态', dim: 'flexibility', reverse: true },
+
+                // 维度3：自我的刻板性 (7题) - 正向计分
+                { id: 29, text: '我一旦形成了对某事的看法就很难改变', dim: 'rigidity', reverse: false },
+                { id: 30, text: '我认为我的性格基本上是固定不变的', dim: 'rigidity', reverse: false },
+                { id: 31, text: '我很难接受与自己不同的意见', dim: 'rigidity', reverse: false },
+                { id: 32, text: '做事情时，我喜欢按习惯的方式来进行', dim: 'rigidity', reverse: false },
+                { id: 33, text: '我觉得改变自己是很困难的事', dim: 'rigidity', reverse: false },
+                { id: 34, text: '我倾向于用固定的标准看待周围的事物', dim: 'rigidity', reverse: false },
+                { id: 35, text: '我不太愿意尝试新的体验', dim: 'rigidity', reverse: false },
+            ];
+
+            // 选项：1-完全不符合 到 5-完全符合
+            const options = [
+                { value: 1, label: '完全不符合', short: '完全不符' },
+                { value: 2, label: '比较不符合', short: '不太符合' },
+                { value: 3, label: '不确定', short: '不确定' },
+                { value: 4, label: '比较符合', short: '比较符合' },
+                { value: 5, label: '完全符合', short: '完全符合' },
+            ];
+
+            // 维度名称
+            const dimNames = {
+                'disharmony': { name: '自我与经验的不和谐', icon: '🌊', short: '不和谐', cardClass: 'disharmony' },
+                'flexibility': { name: '自我的灵活性', icon: '🌿', short: '灵活性', cardClass: 'flexibility' },
+                'rigidity': { name: '自我的刻板性', icon: '🪨', short: '刻板性', cardClass: 'rigidity' },
+            };
+
+            // 状态管理
+            let answers = {}; // { questionId: selectedValue (1-5) }
+            const saved = localStorage.getItem('sccs_answers');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    if (parsed && typeof parsed === 'object') answers = parsed;
+                } catch (e) { answers = {}; }
+            }
+
+            const questionsCard = document.getElementById('questionsCard');
+            const progressBar = document.getElementById('progressBar');
+            const answeredCountEl = document.getElementById('answeredCount');
+            const btnSubmit = document.getElementById('btnSubmit');
+            const btnClear = document.getElementById('btnClear');
+            const navButtons = document.getElementById('navButtons');
+            const resultsSection = document.getElementById('resultsSection');
+            const dimensionGrid = document.getElementById('dimensionGrid');
+            const harmonyOverview = document.getElementById('harmonyOverview');
+            const resultDate = document.getElementById('resultDate');
+            const btnRetake = document.getElementById('btnRetake');
+            const toast = document.getElementById('toast');
+            const progressSection = document.getElementById('progressSection');
+
+            let toastTimer;
+
+            function showToast(msg) {
+                clearTimeout(toastTimer);
+                toast.textContent = msg;
+                toast.classList.add('show');
+                toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
+            }
+
+            function saveAnswers() {
+                localStorage.setItem('sccs_answers', JSON.stringify(answers));
+            }
+
+            // 获取实际计分分数
+            function getRealScore(q, selectedValue) {
+                if (q.reverse) {
+                    return 6 - selectedValue; // 反向计分：选1得5，选5得1
+                }
+                return selectedValue;
+            }
+
+            function renderQuestions() {
+                let html = '';
+                questions.forEach(q => {
+                    const selectedValue = answers[q.id];
+                    const isAnswered = selectedValue !== undefined;
+                    const answeredClass = isAnswered ? ' answered' : '';
+                    const reverseBadge = q.reverse ?
+                        '<span class="reverse-badge">反向</span>' : '';
+                    const dimInfo = dimNames[q.dim];
+                    const dimBadge =
+                        `<span class="dim-badge ${dimInfo.cardClass}">${dimInfo.short}</span>`;
+                    html += `<div class="question-item${answeredClass}">`;
+                    html +=
+                        `<span class="question-num">${q.id}</span><span class="question-text">${q.text}${reverseBadge}${dimBadge}</span>`;
+                    html += `<div class="options-row">`;
+                    options.forEach(opt => {
+                        const selClass = (isAnswered && selectedValue === opt.value) ?
+                            ' selected' : '';
+                        html +=
+                            `<button class="option-btn${selClass}" data-score="${opt.value}" data-qid="${q.id}" aria-label="${opt.label}">
+                                    ${opt.short}<span class="option-score">${opt.label}</span></button>`;
+                    });
+                    html += `</div></div>`;
+                });
+                questionsCard.innerHTML = html;
+
+                questionsCard.querySelectorAll('.option-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const qid = parseInt(this.getAttribute('data-qid'));
+                        const score = parseInt(this.getAttribute('data-score'));
+                        if (answers[qid] === score) {
+                            delete answers[qid];
+                        } else {
+                            answers[qid] = score;
+                        }
+                        saveAnswers();
+                        renderQuestions();
+                        updateProgress();
+                    });
+                });
+                updateProgress();
+            }
+
+            function updateProgress() {
+                const total = questions.length;
+                const answered = Object.keys(answers).length;
+                const pct = Math.round((answered / total) * 100);
+                progressBar.style.width = pct + '%';
+                answeredCountEl.textContent = `已答 ${answered} 题`;
+                btnSubmit.disabled = answered < total;
+            }
+
+            function clearAll() {
+                if (Object.keys(answers).length === 0) {
+                    showToast('暂无已选答案');
+                    return;
+                }
+                if (confirm('确定要清空全部已选答案吗？此操作不可恢复。')) {
+                    answers = {};
+                    saveAnswers();
+                    renderQuestions();
+                    updateProgress();
+                    showToast('已清空全部答案');
+                }
+            }
+
+            function calcDimensionScores() {
+                const dimScores = {
+                    'disharmony': { raw: 0, count: 0, maxRaw: 0 },
+                    'flexibility': { raw: 0, count: 0, maxRaw: 0 },
+                    'rigidity': { raw: 0, count: 0, maxRaw: 0 },
+                };
+                questions.forEach(q => {
+                    if (answers[q.id] !== undefined) {
+                        const realScore = getRealScore(q, answers[q.id]);
+                        dimScores[q.dim].raw += realScore;
+                        dimScores[q.dim].count++;
+                        dimScores[q.dim].maxRaw += 5; // 每题最高5分
+                    }
+                });
+                return dimScores;
+            }
+
+            function getLevelDesc(dim, avgScore) {
+                if (dim === 'disharmony') {
+                    if (avgScore <= 2.0) return '自我与经验高度和谐，内心一致性强';
+                    if (avgScore <= 3.0) return '自我与经验基本和谐，偶尔感到矛盾';
+                    if (avgScore <= 4.0) return '自我与经验存在较明显的不一致';
+                    return '自我与经验严重不和谐，内心冲突较多';
+                } else if (dim === 'flexibility') {
+                    if (avgScore >= 4.0) return '自我灵活性很高，适应能力强';
+                    if (avgScore >= 3.0) return '自我灵活性较好，能够应对变化';
+                    if (avgScore >= 2.0) return '自我灵活性一般，有时难以适应变化';
+                    return '自我灵活性较低，面对变化时可能感到困难';
+                } else if (dim === 'rigidity') {
+                    if (avgScore <= 2.0) return '自我概念开放灵活，不固守成规';
+                    if (avgScore <= 3.0) return '自我概念有一定弹性，偶尔表现得刻板';
+                    if (avgScore <= 4.0) return '自我概念偏刻板，习惯按固定方式行事';
+                    return '自我概念非常刻板，难以改变固有观念';
+                }
+                return '';
+            }
+
+            function submitAndShow() {
+                const total = questions.length;
+                const answered = Object.keys(answers).length;
+                if (answered < total) {
+                    showToast(`还有 ${total - answered} 题未回答，请完成全部题目`);
+                    return;
+                }
+
+                const dimScores = calcDimensionScores();
+
+                // 显示结果区域
+                resultsSection.classList.add('visible');
+                resultDate.textContent = `测评时间：${new Date().toLocaleString('zh-CN')}`;
+
+                // 维度卡片
+                let gridHTML = '';
+                const dimAvgs = {};
+                for (const [dimKey, dimData] of Object.entries(dimScores)) {
+                    const avg = dimData.count > 0 ? (dimData.raw / dimData.count) : 0;
+                    dimAvgs[dimKey] = avg;
+                    const dimInfo = dimNames[dimKey];
+                    const desc = getLevelDesc(dimKey, avg);
+                    gridHTML += `
+                        <div class="dim-card ${dimInfo.cardClass}">
+                            <div class="dim-icon">${dimInfo.icon}</div>
+                            <div class="dim-title">${dimInfo.name}</div>
+                            <div class="dim-score">${dimData.raw} 分</div>
+                            <div class="dim-range">每题均分：${avg.toFixed(2)} / 5.00</div>
+                            <div class="dim-desc">${desc}</div>
+                        </div>`;
+                }
+                dimensionGrid.innerHTML = gridHTML;
+
+                // 综合和谐评估
+                const disharmonyAvg = dimAvgs['disharmony'] || 3;
+                const flexibilityAvg = dimAvgs['flexibility'] || 3;
+                const rigidityAvg = dimAvgs['rigidity'] || 3;
+                // 综合和谐指数：低不和谐 + 高灵活性 + 低刻板性 = 高和谐
+                const harmonyIndex = (6 - disharmonyAvg) * 0.5 + flexibilityAvg * 0.3 + (6 - rigidityAvg) * 0.2;
+                let harmonyLevel, harmonyColor, harmonyDesc;
+                if (harmonyIndex >= 4.5) {
+                    harmonyLevel = '高度和谐';
+                    harmonyColor = '#3d6a4f';
+                    harmonyDesc = '你拥有良好的自我和谐度。你的内心世界与外在经验能够较好地整合，面对变化时灵活从容，同时保持开放的心态。这种状态有助于心理健康和个人成长。';
+                } else if (harmonyIndex >= 3.5) {
+                    harmonyLevel = '比较和谐';
+                    harmonyColor = '#5e8c6f';
+                    harmonyDesc = '你的自我和谐度处于良好水平。大多数时候你能够接纳自己，适应环境。可能在特定情境下会感到一些内心冲突，但整体上能够保持平衡。';
+                } else if (harmonyIndex >= 2.5) {
+                    harmonyLevel = '一般';
+                    harmonyColor = '#8b6919';
+                    harmonyDesc = '你的自我和谐度处于中等水平。你可能会在某些方面感到内心矛盾或难以适应变化。建议多关注自己的内心感受，尝试以更开放和灵活的态度面对自己和周围的世界。';
+                } else if (harmonyIndex >= 1.5) {
+                    harmonyLevel = '不太和谐';
+                    harmonyColor = '#8b3d1f';
+                    harmonyDesc = '你的自我和谐度偏低，可能经常感到内心冲突、难以适应变化，或者固守着某些观念难以改变。建议你寻求心理咨询师的帮助，探索内心的矛盾，学习更灵活的应对方式。';
+                } else {
+                    harmonyLevel = '严重不和谐';
+                    harmonyColor = '#8b1a1a';
+                    harmonyDesc = '你的自我和谐度较低，内心冲突可能较为严重。我们真诚地建议你考虑寻求专业心理咨询师的帮助，系统性地探索自我，学习接纳自己、调节情绪的方法。请记住，求助是勇敢和智慧的表现。';
+                }
+
+                harmonyOverview.innerHTML = `
+                    <div style="font-size:0.85rem;color:var(--text-muted);">综合自我和谐指数</div>
+                    <div class="harmony-level" style="color:${harmonyColor};">${harmonyLevel}</div>
+                    <div class="harmony-desc">${harmonyDesc}</div>
+                    <div style="font-size:0.68rem;color:var(--text-muted);margin-top:8px;">
+                        综合指数范围：1.0-5.0 · 基于不和谐、灵活性、刻板性三维度计算
+                    </div>`;
+
+                // 锁定作答区域
+                progressSection.style.opacity = '0.5';
+                questionsCard.style.opacity = '0.5';
+                navButtons.style.opacity = '0.5';
+                questionsCard.style.pointerEvents = 'none';
+                navButtons.style.pointerEvents = 'none';
+
+                saveAnswers();
+                resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                window.scrollBy(0, -60);
+            }
+
+            function retakeTest() {
+                if (confirm('确定要清除所有答案并重新测评吗？')) {
+                    answers = {};
+                    localStorage.removeItem('sccs_answers');
+                    resultsSection.classList.remove('visible');
+                    progressSection.style.opacity = '1';
+                    questionsCard.style.opacity = '1';
+                    navButtons.style.opacity = '1';
+                    questionsCard.style.pointerEvents = 'auto';
+                    navButtons.style.pointerEvents = 'auto';
+                    renderQuestions();
+                    updateProgress();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+
+            btnClear.addEventListener('click', clearAll);
+            btnSubmit.addEventListener('click', submitAndShow);
+            btnRetake.addEventListener('click', retakeTest);
+
+            renderQuestions();
+            updateProgress();
+
+            console.log('🕊️ SCCS 自我和谐量表已就绪 · 35题 · 三维度评估');
+            console.log('   维度：不和谐(16题) | 灵活性(12题·反向) | 刻板性(7题)');
+            console.log('   评分：1-5级 · 结果仅供自我参考');
+        })();
+    </script>
+</body>
+</html>

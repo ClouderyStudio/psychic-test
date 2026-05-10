@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>情绪稳定性测试 - 心灵驿站</title>
+    <style>
+        :root {
+            --bg: #f7f4f0;
+            --card-bg: #ffffff;
+            --text: #3a3540;
+            --text-secondary: #6b6372;
+            --text-muted: #9a919e;
+            --primary: #5b8c9e;
+            --primary-light: #e8f0f4;
+            --primary-dark: #3d6a7c;
+            --accent: #c97d60;
+            --accent-light: #fdf2ed;
+            --danger: #c0392b;
+            --danger-light: #fdecea;
+            --success: #4a8c6f;
+            --success-light: #eaf5ef;
+            --warning-bg: #fef9f0;
+            --warning-border: #f0d89c;
+            --warning-text: #8b6d3b;
+            --shadow-sm: 0 1px 3px rgba(58, 53, 64, 0.05), 0 1px 2px rgba(58, 53, 64, 0.04);
+            --shadow-md: 0 4px 16px rgba(58, 53, 64, 0.07), 0 2px 6px rgba(58, 53, 64, 0.04);
+            --shadow-lg: 0 8px 30px rgba(58, 53, 64, 0.10), 0 3px 10px rgba(58, 53, 64, 0.05);
+            --radius-sm: 10px;
+            --radius: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 24px;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-sans: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior:smooth; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+        body {
+            font-family:var(--font-sans);
+            background-color:var(--bg);
+            color:var(--text);
+            line-height:1.6;
+            min-height:100vh;
+            background-image:
+                radial-gradient(ellipse at 15% 10%, rgba(91, 140, 158, 0.04) 0%, transparent 55%),
+                radial-gradient(ellipse at 85% 90%, rgba(91, 140, 158, 0.03) 0%, transparent 55%);
+            background-attachment: fixed;
+        }
+        /* 顶部导航 */
+        .top-bar {
+            background: rgba(255,255,255,0.78);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(58,53,64,0.06);
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .top-bar-inner {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            color: var(--primary-dark);
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 7px 14px;
+            border-radius: 20px;
+            transition: var(--transition);
+            background: var(--primary-light);
+            white-space: nowrap;
+        }
+        .back-link:hover { background: #d4e6ef; color: #2c5668; }
+        .scale-label { font-weight: 700; font-size: 0.95rem; color: var(--text); text-align: right; letter-spacing: 0.02em; line-height: 1.3; }
+        .scale-label small { display: block; font-weight: 400; font-size: 0.72rem; color: var(--text-muted); letter-spacing: 0.04em; }
+        .container { max-width: 850px; margin: 0 auto; padding: 0 20px; }
+        .page-header { text-align: center; padding: 32px 0 20px; }
+        .page-header h1 { font-size: clamp(1.3rem, 2.5vw, 1.7rem); font-weight: 700; color: #2c2633; margin-bottom: 6px; }
+        .page-header .subtitle { font-size: 0.85rem; color: var(--text-muted); }
+        /* 进度条 */
+        .progress-section {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 18px 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(58,53,64,0.05);
+        }
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        .progress-bar-outer { width: 100%; height: 8px; background: #e8e3ec; border-radius: 10px; overflow: hidden; }
+        .progress-bar-inner {
+            height: 100%;
+            background: linear-gradient(90deg, #5b8c9e 0%, #7bafc0 100%);
+            border-radius: 10px;
+            transition: width 0.35s ease;
+            width: 0%;
+        }
+        /* 题目卡片 */
+        .questions-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 24px 24px 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(58,53,64,0.05);
+            margin-bottom: 16px;
+        }
+        .question-item {
+            padding: 14px 0;
+            border-bottom: 1px solid #f0edf3;
+            transition: var(--transition);
+        }
+        .question-item:last-child { border-bottom: none; }
+        .question-item.answered {
+            background: #fdfcfe;
+            margin: 0 -16px;
+            padding-left: 16px;
+            padding-right: 16px;
+            border-radius: 8px;
+        }
+        .question-num {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            font-weight: 700;
+            font-size: 0.75rem;
+            width: 26px;
+            height: 26px;
+            line-height: 26px;
+            text-align: center;
+            border-radius: 50%;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+        .question-text {
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: #2c2633;
+            display: inline;
+            letter-spacing: 0.02em;
+            line-height: 1.5;
+        }
+        .reverse-badge {
+            display: inline-block;
+            background: #f2eef6;
+            color: #7b6b8e;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+        .options-row { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+        .option-btn {
+            flex: 1;
+            min-width: 70px;
+            padding: 10px 6px;
+            border-radius: 22px;
+            border: 1.5px solid #e0dbe4;
+            background: #fff;
+            cursor: pointer;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: var(--transition);
+            text-align: center;
+            font-family: var(--font-sans);
+            letter-spacing: 0.02em;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            white-space: nowrap;
+        }
+        .option-btn:hover { border-color: #c5bdd0; background: #faf9fb; color: var(--text); }
+        .option-btn.selected {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+            font-weight: 600;
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+        .option-desc {
+            display: block;
+            font-size: 0.6rem;
+            font-weight: 400;
+            opacity: 0.7;
+            letter-spacing: 0.03em;
+            margin-top: 2px;
+        }
+        .option-btn.selected .option-desc { opacity: 1; }
+        /* 按钮 */
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+        .nav-btn {
+            padding: 12px 28px;
+            border-radius: 24px;
+            border: 1.5px solid #d8d2de;
+            background: #fff;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+            transition: var(--transition);
+            font-family: var(--font-sans);
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+            box-shadow: var(--shadow-sm);
+            -webkit-tap-highlight-color: transparent;
+        }
+        .nav-btn:hover:not(:disabled) { border-color: #b8b0c0; box-shadow: var(--shadow-md); transform: translateY(-1px); }
+        .nav-btn:disabled { opacity: 0.4; cursor: not-allowed; background: #f5f3f7; }
+        .nav-btn.submit-btn {
+            background: #3d5a4f;
+            color: #fff;
+            border-color: #3d5a4f;
+            font-size: 0.95rem;
+            padding: 14px 36px;
+            letter-spacing: 0.04em;
+        }
+        .nav-btn.submit-btn:hover:not(:disabled) { background: #2f4840; border-color: #2f4840; box-shadow: var(--shadow-lg); }
+        .nav-btn.clear-btn { color: var(--danger); border-color: #e8c8c0; }
+        .nav-btn.clear-btn:hover:not(:disabled) { background: var(--danger-light); border-color: #d4a098; }
+        /* 结果区域 */
+        .results-section {
+            display: none;
+            background: var(--card-bg);
+            border-radius: var(--radius-xl);
+            padding: 28px 24px 24px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(58,53,64,0.06);
+            margin-bottom: 32px;
+        }
+        .results-section.visible { display: block; animation: fadeInUp 0.45s ease; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .results-header { text-align: center; margin-bottom: 20px; }
+        .results-header h2 { font-size: 1.3rem; font-weight: 700; color: #2c2633; letter-spacing: 0.02em; }
+        .results-header .result-date { font-size: 0.78rem; color: var(--text-muted); }
+        .result-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .result-stat {
+            background: #faf8fc;
+            border-radius: var(--radius);
+            padding: 16px;
+            text-align: center;
+            border: 1px solid #eeeaf2;
+        }
+        .result-stat .stat-val {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            letter-spacing: -0.02em;
+            line-height: 1;
+        }
+        .result-stat .stat-lbl { font-size: 0.72rem; color: var(--text-muted); margin-top: 4px; letter-spacing: 0.03em; }
+        .result-stat.warning .stat-val { color: var(--accent); }
+        .result-stat.severe .stat-val { color: var(--danger); }
+        .result-level {
+            text-align: center;
+            margin: 16px 0;
+            padding: 16px;
+            border-radius: var(--radius);
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 0.03em;
+        }
+        .result-level.very-stable { background: #e6f4ea; color: #3d6a4f; }
+        .result-level.stable { background: #eaf5ef; color: #2d5a40; }
+        .result-level.moderate { background: #fef6e6; color: #8b6919; }
+        .result-level.unstable { background: #fef0ea; color: #8b3d1f; }
+        .result-level.very-unstable { background: #fdecea; color: #8b1a1a; }
+        .result-desc {
+            background: #faf8fc;
+            border-radius: var(--radius);
+            padding: 16px;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: var(--text);
+            margin: 16px 0;
+            border: 1px solid #eeeaf2;
+        }
+        .disclaimer {
+            background: var(--warning-bg);
+            border: 1px solid var(--warning-border);
+            border-radius: var(--radius);
+            padding: 14px 18px;
+            font-size: 0.82rem;
+            color: var(--warning-text);
+            line-height: 1.6;
+            margin-top: 16px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        .disclaimer-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+        .footer {
+            text-align: center;
+            padding: 20px 20px 36px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            line-height: 1.7;
+            border-top: 1px solid rgba(58,53,64,0.05);
+        }
+        .footer a { color: var(--primary-dark); text-decoration: none; }
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #3a3540;
+            color: #fff;
+            padding: 10px 22px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            box-shadow: var(--shadow-lg);
+        }
+        .toast.show { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(4px); }
+        @media (max-width: 600px) {
+            .questions-card { padding: 16px 12px 12px; }
+            .question-item { padding: 10px 0; }
+            .question-text { font-size: 0.85rem; }
+            .option-btn { padding: 8px 4px; font-size: 0.72rem; min-width: 55px; border-radius: 18px; }
+            .option-desc { font-size: 0.55rem; }
+            .options-row { gap: 4px; }
+            .nav-btn { padding: 10px 18px; font-size: 0.82rem; }
+            .result-summary { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .result-stat { padding: 12px 8px; }
+            .result-stat .stat-val { font-size: 1.4rem; }
+            .top-bar-inner { padding: 0 10px; gap: 8px; }
+            .back-link { font-size: 0.78rem; padding: 6px 10px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="top-bar">
+        <div class="top-bar-inner">
+            <a href="index.html" class="back-link" aria-label="返回量表目录">← 目录</a>
+            <div class="scale-label">
+                情绪稳定性测试
+                <small>Emotional Stability Test</small>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h1>⚖️ 情绪稳定性测试</h1>
+            <p class="subtitle">评估你情绪的稳定程度与自我调节能力 · 共25题 · 约5-8分钟</p>
+        </div>
+
+        <div class="progress-section" id="progressSection">
+            <div class="progress-info">
+                <span>请根据你的实际情况，选择最符合的一项</span>
+                <span id="answeredCount">已答 0 题</span>
+            </div>
+            <div class="progress-bar-outer">
+                <div class="progress-bar-inner" id="progressBar" style="width:0%;"></div>
+            </div>
+            <div style="font-size:0.7rem;color:var(--text-muted);margin-top:6px;">
+                ⚡ 标注 <span class="reverse-badge">反向</span> 的题目计分方式与其他题目相反
+            </div>
+        </div>
+
+        <div class="questions-card" id="questionsCard"></div>
+
+        <div class="nav-buttons" id="navButtons">
+            <button class="nav-btn clear-btn" id="btnClear">🔄 清空全部答案</button>
+            <button class="nav-btn submit-btn" id="btnSubmit" disabled>✅ 提交答卷 · 查看结果</button>
+        </div>
+
+        <div class="results-section" id="resultsSection">
+            <div class="results-header">
+                <h2>📊 测评结果报告</h2>
+                <span class="result-date" id="resultDate"></span>
+            </div>
+            <div class="result-summary" id="resultSummary"></div>
+            <div id="resultLevelContainer"></div>
+            <div id="resultDescContainer"></div>
+            <div class="disclaimer">
+                <span class="disclaimer-icon">⚠️</span>
+                <span><strong>重要提醒：</strong>本测试为情绪稳定性自评工具，结果仅供自我参考，<strong>不能替代专业心理评估</strong>。情绪的波动是人之常情，如果你持续感到困扰，请寻求专业帮助。</span>
+            </div>
+            <div style="text-align:center;margin-top:16px;">
+                <button class="nav-btn" id="btnRetake">🔄 重新测评</button>
+            </div>
+        </div>
+    </main>
+
+    <div class="toast" id="toast"></div>
+
+    <footer class="footer">
+        <a href="index.html">← 返回量表目录</a> · 心灵驿站 - 心理测评中心
+    </footer>
+
+    <script>
+        (function() {
+            // 情绪稳定性测试题目 (25题)
+            const questions = [
+                { id: 1, text: '我的情绪经常起伏不定', reverse: false },
+                { id: 2, text: '面对突发状况，我能保持冷静', reverse: true },
+                { id: 3, text: '一点小事也会让我心烦意乱', reverse: false },
+                { id: 4, text: '我很少为未来而担忧', reverse: true },
+                { id: 5, text: '我容易感到紧张和焦虑', reverse: false },
+                { id: 6, text: '即使遇到挫折，我也能很快恢复平静', reverse: true },
+                { id: 7, text: '我经常感到不开心或沮丧', reverse: false },
+                { id: 8, text: '我的情绪反应通常比较温和', reverse: true },
+                { id: 9, text: '我常常无缘无故地感到疲倦', reverse: false },
+                { id: 10, text: '我能够很好地控制自己的脾气', reverse: true },
+                { id: 11, text: '别人的一句话就能让我想很久', reverse: false },
+                { id: 12, text: '我很少感到孤独', reverse: true },
+                { id: 13, text: '我容易因为小事而发脾气', reverse: false },
+                { id: 14, text: '我对自己的情绪变化有清晰的觉察', reverse: true },
+                { id: 15, text: '遇到压力时，我常常不知道如何是好', reverse: false },
+                { id: 16, text: '我觉得自己是个乐观的人', reverse: true },
+                { id: 17, text: '我经常感到内心不安', reverse: false },
+                { id: 18, text: '适应新环境对我来说并不困难', reverse: true },
+                { id: 19, text: '我有时会突然感到悲伤，却说不出原因', reverse: false },
+                { id: 20, text: '我能够在情绪低落时主动调整自己', reverse: true },
+                { id: 21, text: '我常常反复思考不愉快的事情', reverse: false },
+                { id: 22, text: '多数时候，我的心情是平静而稳定的', reverse: true },
+                { id: 23, text: '我会因为别人的批评而感到非常难过', reverse: false },
+                { id: 24, text: '我相信自己有能力处理情绪问题', reverse: true },
+                { id: 25, text: '我的情绪容易被外界环境所影响', reverse: false },
+            ];
+
+            // 选项：1-完全不符合，2-比较不符合，3-一般，4-比较符合，5-完全符合
+            const options = [
+                { value: 1, label: '完全不符合', short: '完全不符' },
+                { value: 2, label: '比较不符合', short: '不太符合' },
+                { value: 3, label: '一般', short: '一般' },
+                { value: 4, label: '比较符合', short: '比较符合' },
+                { value: 5, label: '完全符合', short: '完全符合' },
+            ];
+
+            // 状态管理
+            let answers = {}; // { questionId: selectedValue (1-5) }
+            const saved = localStorage.getItem('emotion_stability_answers');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    if (parsed && typeof parsed === 'object') answers = parsed;
+                } catch (e) { answers = {}; }
+            }
+
+            const questionsCard = document.getElementById('questionsCard');
+            const progressBar = document.getElementById('progressBar');
+            const answeredCountEl = document.getElementById('answeredCount');
+            const btnSubmit = document.getElementById('btnSubmit');
+            const btnClear = document.getElementById('btnClear');
+            const navButtons = document.getElementById('navButtons');
+            const resultsSection = document.getElementById('resultsSection');
+            const resultSummary = document.getElementById('resultSummary');
+            const resultLevelContainer = document.getElementById('resultLevelContainer');
+            const resultDescContainer = document.getElementById('resultDescContainer');
+            const resultDate = document.getElementById('resultDate');
+            const btnRetake = document.getElementById('btnRetake');
+            const toast = document.getElementById('toast');
+            const progressSection = document.getElementById('progressSection');
+
+            let toastTimer;
+            function showToast(msg) {
+                clearTimeout(toastTimer);
+                toast.textContent = msg;
+                toast.classList.add('show');
+                toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
+            }
+
+            function saveAnswers() {
+                localStorage.setItem('emotion_stability_answers', JSON.stringify(answers));
+            }
+
+            // 计算正向得分（考虑反向计分）
+            function getRealScore(q, selectedValue) {
+                if (q.reverse) {
+                    // 反向计分：选1得5分，选2得4分，选3得3分，选4得2分，选5得1分
+                    return 6 - selectedValue;
+                }
+                return selectedValue;
+            }
+
+            function renderQuestions() {
+                let html = '';
+                questions.forEach(q => {
+                    const selectedValue = answers[q.id];
+                    const isAnswered = selectedValue !== undefined;
+                    const answeredClass = isAnswered ? ' answered' : '';
+                    const reverseBadge = q.reverse ? '<span class="reverse-badge">反向</span>' : '';
+                    html += `<div class="question-item${answeredClass}">`;
+                    html += `<span class="question-num">${q.id}</span><span class="question-text">${q.text}${reverseBadge}</span>`;
+                    html += `<div class="options-row" data-qid="${q.id}">`;
+                    options.forEach(opt => {
+                        const selClass = (isAnswered && selectedValue === opt.value) ? ' selected' : '';
+                        html += `<button class="option-btn${selClass}" data-score="${opt.value}" data-qid="${q.id}" aria-label="${opt.label}">
+                                    ${opt.short}<span class="option-desc">${opt.label}</span></button>`;
+                    });
+                    html += `</div></div>`;
+                });
+                questionsCard.innerHTML = html;
+
+                // 绑定选项点击事件
+                questionsCard.querySelectorAll('.option-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const qid = parseInt(this.getAttribute('data-qid'));
+                        const score = parseInt(this.getAttribute('data-score'));
+                        if (answers[qid] === score) {
+                            delete answers[qid];
+                        } else {
+                            answers[qid] = score;
+                        }
+                        saveAnswers();
+                        renderQuestions();
+                        updateProgress();
+                    });
+                });
+                updateProgress();
+            }
+
+            function updateProgress() {
+                const total = questions.length;
+                const answered = Object.keys(answers).length;
+                const pct = Math.round((answered / total) * 100);
+                progressBar.style.width = pct + '%';
+                answeredCountEl.textContent = `已答 ${answered} 题`;
+                btnSubmit.disabled = answered < total;
+            }
+
+            function clearAll() {
+                if (Object.keys(answers).length === 0) {
+                    showToast('暂无已选答案');
+                    return;
+                }
+                if (confirm('确定要清空全部已选答案吗？此操作不可恢复。')) {
+                    answers = {};
+                    saveAnswers();
+                    renderQuestions();
+                    updateProgress();
+                    showToast('已清空全部答案');
+                }
+            }
+
+            function calcLevel(totalRealScore) {
+                const maxScore = questions.length * 5; // 125
+                const minScore = questions.length * 1; // 25
+                // 分数越高，情绪越不稳定
+                if (totalRealScore <= 50) return { class: 'very-stable', text: '情绪非常稳定', desc: '你的情绪波动很小，能够从容应对生活中的压力与挑战。你善于管理自己的情绪，心态平和，内心强大。' };
+                if (totalRealScore <= 70) return { class: 'stable', text: '情绪比较稳定', desc: '大多数时候你的情绪是平稳的，偶尔会有波动但能较快恢复。你具备一定的情绪调节能力，生活整体上处于比较舒适的状态。' };
+                if (totalRealScore <= 90) return { class: 'moderate', text: '情绪稳定性一般', desc: '你的情绪时好时坏，有时能控制得很好，有时又容易受到影响。建议你多关注自己的情绪变化，学习一些放松技巧，提升情绪管理能力。' };
+                if (totalRealScore <= 110) return { class: 'unstable', text: '情绪不太稳定', desc: '你经常被负面情绪困扰，容易紧张、焦虑或低落。外界的风吹草动都可能引起内心的波澜。建议你有意识地练习正念、深呼吸等方法，或与朋友倾诉，必要时寻求专业心理帮助。' };
+                return { class: 'very-unstable', text: '情绪非常不稳定', desc: '你的情绪起伏很大，时常感到失控，这可能会对你的生活、工作和人际关系造成显著影响。我们强烈建议你考虑寻求专业心理咨询师的帮助，学习系统性的情绪调节策略。请记住，求助是勇敢的表现。' };
+            }
+
+            function submitAndShow() {
+                const total = questions.length;
+                const answered = Object.keys(answers).length;
+                if (answered < total) {
+                    showToast(`还有 ${total - answered} 题未回答，请完成全部题目`);
+                    return;
+                }
+
+                // 计算实际总分
+                let totalRealScore = 0;
+                questions.forEach(q => {
+                    totalRealScore += getRealScore(q, answers[q.id]);
+                });
+
+                const level = calcLevel(totalRealScore);
+                const maxScore = questions.length * 5;
+                const minScore = questions.length * 1;
+
+                // 显示结果区域
+                resultsSection.classList.add('visible');
+                resultDate.textContent = `测评时间：${new Date().toLocaleString('zh-CN')}`;
+
+                // 统计卡片
+                const percentage = Math.round((totalRealScore - minScore) / (maxScore - minScore) * 100);
+                let statClass = '';
+                if (totalRealScore > 90) statClass = ' warning';
+                if (totalRealScore > 110) statClass = ' severe';
+
+                resultSummary.innerHTML = `
+                    <div class="result-stat${statClass}">
+                        <div class="stat-val">${totalRealScore}</div>
+                        <div class="stat-lbl">实际总分 (${minScore}-${maxScore})</div>
+                    </div>
+                    <div class="result-stat">
+                        <div class="stat-val">${percentage}%</div>
+                        <div class="stat-lbl">情绪不稳定指数</div>
+                    </div>
+                `;
+
+                resultLevelContainer.innerHTML = `<div class="result-level ${level.class}">${level.text}</div>`;
+                resultDescContainer.innerHTML = `<div class="result-desc">${level.desc}</div>`;
+
+                // 锁定作答区域
+                progressSection.style.opacity = '0.5';
+                questionsCard.style.opacity = '0.5';
+                navButtons.style.opacity = '0.5';
+                questionsCard.style.pointerEvents = 'none';
+                navButtons.style.pointerEvents = 'none';
+
+                saveAnswers();
+                resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                window.scrollBy(0, -60);
+            }
+
+            function retakeTest() {
+                if (confirm('确定要清除所有答案并重新测评吗？')) {
+                    answers = {};
+                    localStorage.removeItem('emotion_stability_answers');
+                    resultsSection.classList.remove('visible');
+                    progressSection.style.opacity = '1';
+                    questionsCard.style.opacity = '1';
+                    navButtons.style.opacity = '1';
+                    questionsCard.style.pointerEvents = 'auto';
+                    navButtons.style.pointerEvents = 'auto';
+                    resultLevelContainer.innerHTML = '';
+                    resultDescContainer.innerHTML = '';
+                    renderQuestions();
+                    updateProgress();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+
+            btnClear.addEventListener('click', clearAll);
+            btnSubmit.addEventListener('click', submitAndShow);
+            btnRetake.addEventListener('click', retakeTest);
+
+            renderQuestions();
+            updateProgress();
+
+            console.log('⚖️ 情绪稳定性测试已就绪 · 25题 · 1-5级评分 · 反向计分题已标注');
+        })();
+    </script>
+</body>
+</html>
