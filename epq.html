@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPQ 艾森克人格问卷 - 心灵驿站</title>
+    <style>
+        :root {
+            --bg: #f7f4f0;
+            --card-bg: #ffffff;
+            --text: #3a3540;
+            --text-secondary: #6b6372;
+            --text-muted: #9a919e;
+            --primary: #5b8c9e;
+            --primary-light: #e8f0f4;
+            --primary-dark: #3d6a7c;
+            --accent: #c97d60;
+            --accent-light: #fdf2ed;
+            --personality: #7b6b8e;
+            --personality-bg: #f2eef6;
+            --personality-tag: #e2daea;
+            --shadow-sm: 0 1px 3px rgba(58,53,64,0.05),0 1px 2px rgba(58,53,64,0.04);
+            --shadow-md: 0 4px 16px rgba(58,53,64,0.07),0 2px 6px rgba(58,53,64,0.04);
+            --shadow-lg: 0 8px 30px rgba(58,53,64,0.10),0 3px 10px rgba(58,53,64,0.05);
+            --radius-sm: 10px; --radius: 14px; --radius-lg: 20px; --radius-xl: 24px;
+            --transition: 0.25s cubic-bezier(0.4,0,0.2,1);
+            --font-sans: "PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,-apple-system,sans-serif;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior:smooth; -webkit-font-smoothing:antialiased; }
+        body {
+            font-family:var(--font-sans); background-color:var(--bg); color:var(--text); line-height:1.6; min-height:100vh;
+            background-image: radial-gradient(ellipse at 15% 10%, rgba(123,107,142,0.04) 0%, transparent 55%),
+            radial-gradient(ellipse at 85% 90%, rgba(123,107,142,0.03) 0%, transparent 55%);
+            background-attachment:fixed;
+        }
+        .top-bar { background:rgba(255,255,255,0.78); backdrop-filter:blur(18px); border-bottom:1px solid rgba(58,53,64,0.06);
+            padding:10px 0; position:sticky; top:0; z-index:100; }
+        .top-bar-inner { max-width:1000px; margin:0 auto; padding:0 20px; display:flex; align-items:center;
+            justify-content:space-between; gap:12px; }
+        .back-link { display:inline-flex; align-items:center; gap:6px; text-decoration:none; color:var(--primary-dark);
+            font-weight:600; font-size:0.9rem; padding:7px 14px; border-radius:20px; transition:var(--transition);
+            background:var(--primary-light); white-space:nowrap; }
+        .back-link:hover { background:#d4e6ef; color:#2c5668; }
+        .scale-label { font-weight:700; font-size:0.95rem; color:var(--text); text-align:right; letter-spacing:0.02em; line-height:1.3; }
+        .scale-label small { display:block; font-weight:400; font-size:0.72rem; color:var(--text-muted); letter-spacing:0.04em; }
+        .container { max-width:850px; margin:0 auto; padding:0 20px; }
+        .page-header { text-align:center; padding:32px 0 20px; }
+        .page-header h1 { font-size:1.6rem; font-weight:700; color:#2c2633; margin-bottom:6px; }
+        .page-header .subtitle { font-size:0.85rem; color:var(--text-muted); }
+        .progress-section { background:var(--card-bg); border-radius:var(--radius-lg); padding:18px 20px; margin-bottom:16px;
+            box-shadow:var(--shadow-sm); border:1px solid rgba(58,53,64,0.05); }
+        .progress-info { display:flex; justify-content:space-between; margin-bottom:10px; font-size:0.82rem;
+            color:var(--text-secondary); font-weight:500; }
+        .progress-bar-outer { width:100%; height:8px; background:#e8e3ec; border-radius:10px; overflow:hidden; }
+        .progress-bar-inner { height:100%; background:linear-gradient(90deg,#7b6b8e 0%,#a390b8 100%);
+            border-radius:10px; transition:width 0.35s ease; width:0%; }
+        .questions-card { background:var(--card-bg); border-radius:var(--radius-lg); padding:20px 20px 10px;
+            box-shadow:var(--shadow-sm); border:1px solid rgba(58,53,64,0.05); margin-bottom:16px; }
+        .question-item { padding:10px 0; border-bottom:1px solid #f0edf3; display:flex; align-items:center;
+            flex-wrap:wrap; gap:8px; }
+        .question-item:last-child { border-bottom:none; }
+        .question-num { display:inline-block; background:var(--personality-bg); color:var(--personality); font-weight:700;
+            font-size:0.7rem; width:24px; height:24px; line-height:24px; text-align:center; border-radius:50%;
+            margin-right:6px; flex-shrink:0; }
+        .question-text { flex:1; font-weight:500; font-size:0.9rem; color:#2c2633; min-width:200px; }
+        .options-mini { display:flex; gap:6px; flex-shrink:0; }
+        .option-pill { padding:6px 18px; border-radius:16px; border:1.5px solid #e0dbe4; background:#fff;
+            cursor:pointer; font-size:0.78rem; font-weight:500; color:var(--text-secondary); transition:var(--transition);
+            user-select:none; }
+        .option-pill:hover { border-color:#c5bdd0; background:#faf9fb; }
+        .option-pill.selected { background:var(--personality); color:#fff; border-color:var(--personality); font-weight:600; }
+        .nav-buttons { display:flex; gap:12px; justify-content:center; margin-bottom:32px; flex-wrap:wrap; }
+        .nav-btn { padding:12px 28px; border-radius:24px; border:1.5px solid #d8d2de; background:#fff;
+            cursor:pointer; font-size:0.9rem; font-weight:600; color:var(--text); transition:var(--transition);
+            font-family:var(--font-sans); letter-spacing:0.03em; box-shadow:var(--shadow-sm); }
+        .nav-btn:hover:not(:disabled) { border-color:#b8b0c0; box-shadow:var(--shadow-md); transform:translateY(-1px); }
+        .nav-btn:disabled { opacity:0.4; cursor:not-allowed; background:#f5f3f7; }
+        .nav-btn.submit-btn { background:#3d5a4f; color:#fff; border-color:#3d5a4f; font-size:0.95rem;
+            padding:14px 36px; letter-spacing:0.04em; }
+        .nav-btn.submit-btn:hover:not(:disabled) { background:#2f4840; border-color:#2f4840; box-shadow:var(--shadow-lg); }
+        .nav-btn.clear-btn { color:var(--accent); border-color:#e8c8c0; }
+        .nav-btn.clear-btn:hover:not(:disabled) { background:var(--accent-light); border-color:#d4a098; }
+        .results-section { display:none; background:var(--card-bg); border-radius:var(--radius-xl); padding:28px 24px;
+            box-shadow:var(--shadow-lg); border:1px solid rgba(58,53,64,0.06); margin-bottom:32px; }
+        .results-section.visible { display:block; animation:fadeInUp 0.45s ease; }
+        @keyframes fadeInUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+        .results-header { text-align:center; margin-bottom:20px; }
+        .results-header h2 { font-size:1.3rem; font-weight:700; color:#2c2633; }
+        .results-header .result-date { font-size:0.78rem; color:var(--text-muted); }
+        .dimension-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px;
+            margin-bottom:20px; }
+        .dimension-card { background:#faf8fc; border-radius:var(--radius); padding:14px; border:1px solid #eeeaf2;
+            text-align:center; }
+        .dim-code { font-weight:800; font-size:1.1rem; color:var(--personality); }
+        .dim-name { font-size:0.75rem; color:var(--text-muted); margin:2px 0; }
+        .dim-score { font-size:1.6rem; font-weight:700; color:var(--text); margin:6px 0; }
+        .dim-desc { font-size:0.72rem; color:var(--text-secondary); line-height:1.4; }
+        .temperament-box { background:var(--personality-bg); border-radius:var(--radius); padding:14px;
+            text-align:center; margin:16px 0; border:1px solid var(--personality-tag); }
+        .temperament-box strong { font-size:1rem; color:var(--personality); }
+        .disclaimer { background:#fef9f0; border:1px solid #f0d89c; border-radius:var(--radius);
+            padding:14px 18px; font-size:0.82rem; color:#8b6d3b; line-height:1.6; margin-top:16px; display:flex; gap:10px; }
+        .disclaimer-icon { font-size:1.2rem; flex-shrink:0; }
+        .footer { text-align:center; padding:20px 20px 36px; color:var(--text-muted); font-size:0.75rem;
+            line-height:1.7; border-top:1px solid rgba(58,53,64,0.05); }
+        .footer a { color:var(--primary-dark); text-decoration:none; }
+        .toast { position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#3a3540; color:#fff;
+            padding:10px 22px; border-radius:20px; font-size:0.85rem; font-weight:600; letter-spacing:0.03em;
+            z-index:200; opacity:0; pointer-events:none; transition:opacity 0.3s; box-shadow:var(--shadow-lg); }
+        .toast.show { opacity:1; pointer-events:auto; transform:translateX(-50%) translateY(4px); }
+        @media (max-width:600px) {
+            .questions-card { padding:14px 10px; }
+            .question-text { font-size:0.82rem; }
+            .option-pill { padding:5px 14px; font-size:0.73rem; }
+            .dimension-grid { grid-template-columns:1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="top-bar">
+        <div class="top-bar-inner">
+            <a href="index.html" class="back-link" aria-label="返回量表目录">← 目录</a>
+            <div class="scale-label">
+                EPQ 艾森克人格问卷
+                <small>Eysenck Personality Questionnaire (48题简式)</small>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h1>🎯 EPQ 艾森克人格问卷 (简式)</h1>
+            <p class="subtitle">了解你的人格基本维度 · 共48题 · 约6-10分钟</p>
+        </div>
+
+        <div class="progress-section" id="progressSection">
+            <div class="progress-info">
+                <span>请根据你的实际情况回答“是”或“否”</span>
+                <span id="answeredCount">已答 0 题</span>
+            </div>
+            <div class="progress-bar-outer">
+                <div class="progress-bar-inner" id="progressBar" style="width:0%;"></div>
+            </div>
+        </div>
+
+        <div class="questions-card" id="questionsCard"></div>
+
+        <div class="nav-buttons" id="navButtons">
+            <button class="nav-btn clear-btn" id="btnClear">🔄 清空全部答案</button>
+            <button class="nav-btn submit-btn" id="btnSubmit" disabled>✅ 提交答卷 · 查看结果</button>
+        </div>
+
+        <div class="results-section" id="resultsSection">
+            <div class="results-header">
+                <h2>🧬 EPQ 人格维度结果</h2>
+                <span class="result-date" id="resultDate"></span>
+            </div>
+            <div class="dimension-grid" id="dimensionGrid"></div>
+            <div class="temperament-box" id="temperamentBox"></div>
+            <div class="disclaimer">
+                <span class="disclaimer-icon">⚠️</span>
+                <span><strong>重要提醒：</strong>本测试为自评人格工具，结果仅供自我了解和参考，<strong>不能作为临床诊断依据</strong>。如果你对自身心理状态有疑虑，请咨询专业心理医生。</span>
+            </div>
+            <div style="text-align:center;margin-top:16px;">
+                <button class="nav-btn" id="btnRetake">🔄 重新测评</button>
+            </div>
+        </div>
+    </main>
+
+    <div class="toast" id="toast"></div>
+
+    <footer class="footer">
+        <a href="index.html">← 返回量表目录</a> · 心灵驿站 - 心理测评中心
+    </footer>
+
+    <script>
+        (function() {
+            // EPQ 简式48题，每题含因子(P/E/N/L)及是否反向(reverse: true表示“否”得1分)
+            const questions = [
+                {id:1,text:'你的情绪是否时起时落？',factor:'N',reverse:false},
+                {id:2,text:'当你看到小孩（或动物）受折磨时是否感到难受？',factor:'P',reverse:true},
+                {id:3,text:'你是个健谈的人吗？',factor:'E',reverse:false},
+                {id:4,text:'如果你说了要做什么事，是否不论此事可能如何不顺利你都总能遵守诺言？',factor:'L',reverse:false},
+                {id:5,text:'你是否会无缘无故地感到“很惨”？',factor:'N',reverse:false},
+                {id:6,text:'欠债会使你感到忧虑吗？',factor:'P',reverse:true},
+                {id:7,text:'你是个生气勃勃、活力充沛的人吗？',factor:'E',reverse:false},
+                {id:8,text:'你是否曾贪图过超过你应得的分外之物？',factor:'L',reverse:true},
+                {id:9,text:'你是个容易被激怒的人吗？',factor:'N',reverse:false},
+                {id:10,text:'你会服用能产生奇异或危险效果的药物吗？',factor:'P',reverse:false},
+                {id:11,text:'你愿意认识陌生人吗？',factor:'E',reverse:false},
+                {id:12,text:'你是否曾经有过明知自己做错了事却责备别人的情况？',factor:'L',reverse:true},
+                {id:13,text:'你的感情容易受伤害吗？',factor:'N',reverse:false},
+                {id:14,text:'你是否愿意按照自己的方式行事，而不喜欢按照规则办事？',factor:'P',reverse:false},
+                {id:15,text:'在热闹的聚会中你能使自己放得开，玩得开心吗？',factor:'E',reverse:false},
+                {id:16,text:'你所有的习惯是否都是好的？',factor:'L',reverse:false},
+                {id:17,text:'你是否时常感到“极其厌倦”？',factor:'N',reverse:false},
+                {id:18,text:'良好的举止和整洁对你来说很重要吗？',factor:'P',reverse:true},
+                {id:19,text:'在结交新朋友时，你经常是积极主动的吗？',factor:'E',reverse:false},
+                {id:20,text:'你是否有过随口骂人的时候？',factor:'L',reverse:true},
+                {id:21,text:'你认为自己是一个胆怯不安的人吗？',factor:'N',reverse:false},
+                {id:22,text:'你是否认为婚姻是不合时宜的，应该废除？',factor:'P',reverse:false},
+                {id:23,text:'你能否很容易地给一个沉闷的聚会注入活力？',factor:'E',reverse:false},
+                {id:24,text:'你曾毁坏或丢失过别人的东西吗？',factor:'L',reverse:true},
+                {id:25,text:'你是个忧心忡忡的人吗？',factor:'N',reverse:false},
+                {id:26,text:'你爱和别人合作吗？',factor:'P',reverse:true},
+                {id:27,text:'在社交场合你是否倾向于呆在不显眼的地方？',factor:'E',reverse:true},
+                {id:28,text:'如果在你的工作中出现了错误，你知道后会感到忧虑吗？',factor:'L',reverse:false},
+                {id:29,text:'你讲过别人的坏话或脏话吗？',factor:'L',reverse:true},
+                {id:30,text:'你认为自己是个神经紧张或“弦绷得过紧”的人吗？',factor:'N',reverse:false},
+                {id:31,text:'你是否觉得人们为了未来有保障，而在储蓄和保险方面花费了太多的时间？',factor:'P',reverse:false},
+                {id:32,text:'你是否喜欢和人们相处在一起？',factor:'E',reverse:false},
+                {id:33,text:'当你还是个小孩子的时候，你是否曾有过对父母耍赖或不听话的行为？',factor:'L',reverse:true},
+                {id:34,text:'在经历了一次令人难堪的事之后，你是否会为此烦恼很长时间？',factor:'N',reverse:false},
+                {id:35,text:'你是否努力使自己对人不粗鲁？',factor:'P',reverse:true},
+                {id:36,text:'你是否喜欢在自己周围有许多热闹和令人兴奋的事情？',factor:'E',reverse:false},
+                {id:37,text:'你曾在玩游戏时作过弊吗？',factor:'L',reverse:true},
+                {id:38,text:'你是否因自己的“神经过敏”而感到痛苦？',factor:'N',reverse:false},
+                {id:39,text:'你愿意别人怕你吗？',factor:'P',reverse:false},
+                {id:40,text:'你曾利用过别人吗？',factor:'L',reverse:true},
+                {id:41,text:'你是否喜欢说笑话和谈论有趣的事？',factor:'E',reverse:false},
+                {id:42,text:'你是否时常感到孤独？',factor:'N',reverse:false},
+                {id:43,text:'你是否认为遵循社会规范比按照个人方式行事更好一些？',factor:'P',reverse:true},
+                {id:44,text:'在别人眼里你总是充满活力的吗？',factor:'E',reverse:false},
+                {id:45,text:'你总能做到言行一致吗？',factor:'L',reverse:false},
+                {id:46,text:'你是否时常被负疚感所困扰？',factor:'N',reverse:false},
+                {id:47,text:'你有时将今天该做的事情拖到明天去做吗？',factor:'L',reverse:true},
+                {id:48,text:'你能使一个聚会顺利进行下去吗？',factor:'E',reverse:false}
+            ];
+
+            let answers = {}; // { id: true = 是, false = 否 }
+            const saved = localStorage.getItem('epq_answers');
+            if(saved){ try { const p = JSON.parse(saved); if(p) answers = p; } catch(e){ } }
+
+            const questionsCard = document.getElementById('questionsCard');
+            const progressBar = document.getElementById('progressBar');
+            const answeredCountEl = document.getElementById('answeredCount');
+            const btnSubmit = document.getElementById('btnSubmit');
+            const btnClear = document.getElementById('btnClear');
+            const navButtons = document.getElementById('navButtons');
+            const resultsSection = document.getElementById('resultsSection');
+            const resultDate = document.getElementById('resultDate');
+            const dimensionGrid = document.getElementById('dimensionGrid');
+            const temperamentBox = document.getElementById('temperamentBox');
+            const btnRetake = document.getElementById('btnRetake');
+            const toast = document.getElementById('toast');
+            const progressSection = document.getElementById('progressSection');
+
+            let toastTimer;
+            function showToast(msg) {
+                clearTimeout(toastTimer);
+                toast.textContent = msg;
+                toast.classList.add('show');
+                toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
+            }
+
+            function saveAnswers() { localStorage.setItem('epq_answers', JSON.stringify(answers)); }
+
+            function renderQuestions() {
+                let html = '';
+                questions.forEach(q => {
+                    const ans = answers[q.id];
+                    const isAnswered = ans !== undefined;
+                    html += `<div class="question-item">`;
+                    html += `<span class="question-num">${q.id}</span>`;
+                    html += `<span class="question-text">${q.text}</span>`;
+                    html += `<div class="options-mini">`;
+                    html += `<button class="option-pill${isAnswered && ans === true ? ' selected' : ''}" data-qid="${q.id}" data-val="1">是</button>`;
+                    html += `<button class="option-pill${isAnswered && ans === false ? ' selected' : ''}" data-qid="${q.id}" data-val="0">否</button>`;
+                    html += `</div></div>`;
+                });
+                questionsCard.innerHTML = html;
+
+                questionsCard.querySelectorAll('.option-pill').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const qid = parseInt(this.dataset.qid);
+                        const val = this.dataset.val === '1'; // true=是, false=否
+                        if (answers[qid] === val) {
+                            delete answers[qid];
+                        } else {
+                            answers[qid] = val;
+                        }
+                        saveAnswers();
+                        renderQuestions();
+                        updateProgress();
+                    });
+                });
+                updateProgress();
+            }
+
+            function updateProgress() {
+                const total = questions.length;
+                const answered = Object.keys(answers).length;
+                const pct = Math.round((answered / total) * 100);
+                progressBar.style.width = pct + '%';
+                answeredCountEl.textContent = `已答 ${answered} 题`;
+                btnSubmit.disabled = answered < total;
+            }
+
+            function clearAll() {
+                if (Object.keys(answers).length === 0) { showToast('暂无已选答案'); return; }
+                if (confirm('确定清空全部答案吗？')) {
+                    answers = {};
+                    saveAnswers();
+                    renderQuestions();
+                    updateProgress();
+                    showToast('已清空全部答案');
+                }
+            }
+
+            function calcScores() {
+                const scores = { P:0, E:0, N:0, L:0 };
+                questions.forEach(q => {
+                    const ans = answers[q.id];
+                    if (ans === undefined) return;
+                    let score = 0;
+                    if (q.reverse) {
+                        // 反向计分：答“否”(false)得1分
+                        score = (ans === false) ? 1 : 0;
+                    } else {
+                        // 正向计分：答“是”(true)得1分
+                        score = (ans === true) ? 1 : 0;
+                    }
+                    scores[q.factor] += score;
+                });
+                return scores;
+            }
+
+            function getInterpretation(factor, rawScore) {
+                // 各维度12题，最高12分。高低分以常模参考中位数6为界，但实际各有差异，这里使用简单描述
+                const desc = {
+                    E: {
+                        high: '外向：爱社交、喜聚会、朋友多，健谈，不喜欢独处，渴望刺激和冒险。',
+                        low: '内向：安静、离群、内省，喜欢独处，不喜欢刺激，做事有计划，生活有规律。'
+                    },
+                    N: {
+                        high: '情绪不稳定：焦虑、紧张、易怒，对各种刺激反应强烈，情绪波动大。',
+                        low: '情绪稳定：平静、放松、反应缓慢，情绪稳定，不易心烦意乱。'
+                    },
+                    P: {
+                        high: '精神质倾向：孤独、不关心他人，缺乏同情心，可能表现出攻击性和不人道的行为。',
+                        low: '精神质低：合群、富有同情心，关心他人，遵守社会规范，容易适应环境。'
+                    },
+                    L: {
+                        high: '掩饰性高：可能试图表现得符合社会期望，或者自我保护意识强。（分数过高可能表明隐瞒真实情况）',
+                        low: '掩饰性低：较为坦白，较少伪装，愿意表露真实情况。'
+                    }
+                };
+                const cut = 7; // 简单分界
+                if (factor === 'L') {
+                    if (rawScore >= 7) return desc.L.high;
+                    else return desc.L.low;
+                }
+                if (rawScore >= cut) return desc[factor].high;
+                else return desc[factor].low;
+            }
+
+            function getTemperament(E, N) {
+                if (E >= 7 && N >= 7) return '胆汁质（外向-不稳定）：兴奋型，直率、热情、精力旺盛，但情绪变化剧烈，可能急躁易怒。';
+                if (E >= 7 && N < 7) return '多血质（外向-稳定）：活泼型，灵活好动，适应力强，善于交际，但可能缺乏耐心和毅力。';
+                if (E < 7 && N >= 7) return '抑郁质（内向-不稳定）：抑制型，情感深刻细腻，敏感多疑，内向孤僻，容易忧虑。';
+                return '黏液质（内向-稳定）：安静型，稳重、沉着，善于克制，生活有规律，但可能缺乏灵活性。';
+            }
+
+            function submitAndShow() {
+                const total = questions.length;
+                const answered = Object.keys(answers).length;
+                if (answered < total) { showToast(`还有 ${total - answered} 题未回答`); return; }
+
+                const scores = calcScores();
+                resultsSection.classList.add('visible');
+                resultDate.textContent = `测评时间：${new Date().toLocaleString('zh-CN')}`;
+
+                // 维度卡片
+                const dims = [
+                    { code:'E', name:'内外向' },
+                    { code:'N', name:'神经质 / 情绪稳定性' },
+                    { code:'P', name:'精神质' },
+                    { code:'L', name:'掩饰性' }
+                ];
+                let gridHTML = '';
+                dims.forEach(d => {
+                    const s = scores[d.code];
+                    const interp = getInterpretation(d.code, s);
+                    gridHTML += `<div class="dimension-card">
+                        <div class="dim-code">${d.code}</div>
+                        <div class="dim-name">${d.name}</div>
+                        <div class="dim-score">${s} / 12</div>
+                        <div class="dim-desc">${interp}</div>
+                    </div>`;
+                });
+                dimensionGrid.innerHTML = gridHTML;
+
+                // 气质类型
+                const temperament = getTemperament(scores.E, scores.N);
+                temperamentBox.innerHTML = `<strong>🌡️ 气质类型参考：</strong><br>${temperament}
+                    <br><small style="color:var(--text-muted);">（根据E和N维度组合估算，仅供参考）</small>`;
+
+                // 锁定
+                progressSection.style.opacity = '0.5';
+                questionsCard.style.opacity = '0.5';
+                navButtons.style.opacity = '0.5';
+                questionsCard.style.pointerEvents = 'none';
+                navButtons.style.pointerEvents = 'none';
+
+                saveAnswers();
+                resultsSection.scrollIntoView({ behavior:'smooth', block:'start' });
+                window.scrollBy(0, -60);
+            }
+
+            function retakeTest() {
+                if (confirm('确定要清除所有答案并重新测评吗？')) {
+                    answers = {};
+                    localStorage.removeItem('epq_answers');
+                    resultsSection.classList.remove('visible');
+                    progressSection.style.opacity = '1';
+                    questionsCard.style.opacity = '1';
+                    navButtons.style.opacity = '1';
+                    questionsCard.style.pointerEvents = 'auto';
+                    navButtons.style.pointerEvents = 'auto';
+                    renderQuestions();
+                    updateProgress();
+                    window.scrollTo({ top:0, behavior:'smooth' });
+                }
+            }
+
+            btnClear.addEventListener('click', clearAll);
+            btnSubmit.addEventListener('click', submitAndShow);
+            btnRetake.addEventListener('click', retakeTest);
+
+            renderQuestions();
+            updateProgress();
+
+            console.log('🎯 EPQ 艾森克人格问卷已就绪 · 48题 · 是/否作答');
+        })();
+    </script>
+</body>
+</html>
