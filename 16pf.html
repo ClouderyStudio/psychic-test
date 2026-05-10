@@ -4,87 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>16PF 卡特尔人格因素问卷 - 心灵驿站</title>
+    <link rel="stylesheet" href="common.css">
     <style>
-        :root {
-            --bg: #f7f4f0;
-            --card-bg: #ffffff;
-            --text: #3a3540;
-            --text-secondary: #6b6372;
-            --text-muted: #9a919e;
-            --primary: #5b8c9e;
-            --primary-light: #e8f0f4;
-            --primary-dark: #3d6a7c;
-            --accent: #c97d60;
-            --accent-light: #fdf2ed;
-            --danger: #c0392b;
-            --danger-light: #fdecea;
-            --personality: #7b6b8e;
-            --personality-bg: #f2eef6;
-            --shadow-sm: 0 1px 3px rgba(58,53,64,0.05),0 1px 2px rgba(58,53,64,0.04);
-            --shadow-md: 0 4px 16px rgba(58,53,64,0.07),0 2px 6px rgba(58,53,64,0.04);
-            --shadow-lg: 0 8px 30px rgba(58,53,64,0.10),0 3px 10px rgba(58,53,64,0.05);
-            --radius: 14px; --radius-lg: 20px; --radius-xl: 24px;
-            --transition: 0.25s cubic-bezier(0.4,0,0.2,1);
-            --font-sans: "PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,-apple-system,sans-serif;
-        }
-        *{margin:0;padding:0;box-sizing:border-box;}
-        html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;}
-        body{font-family:var(--font-sans);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;
-            background-image: radial-gradient(ellipse at 15% 10%, rgba(123,107,142,0.03) 0%, transparent 55%),
-            radial-gradient(ellipse at 85% 90%, rgba(123,107,142,0.03) 0%, transparent 55%);background-attachment:fixed;}
-        .top-bar{background:rgba(255,255,255,0.8);backdrop-filter:blur(18px);border-bottom:1px solid rgba(58,53,64,0.06);
-            padding:10px 0;position:sticky;top:0;z-index:100;}
-        .top-bar-inner{max-width:1000px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;}
-        .back-link{display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:var(--primary-dark);font-weight:600;
-            font-size:0.9rem;padding:7px 14px;border-radius:20px;background:var(--primary-light);}
-        .back-link:hover{background:#d4e6ef;}
-        .container{max-width:960px;margin:0 auto;padding:0 20px;}
-        .page-header{text-align:center;padding:32px 0 16px;}
-        .page-header h1{font-size:1.6rem;font-weight:700;color:#2c2633;}
-        .page-header .subtitle{font-size:0.85rem;color:var(--text-muted);}
-        .progress-section{background:var(--card-bg);border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:16px;
-            box-shadow:var(--shadow-sm);border:1px solid rgba(58,53,64,0.05);}
-        .progress-info{display:flex;justify-content:space-between;margin-bottom:10px;font-size:0.82rem;color:var(--text-secondary);}
-        .progress-bar-outer{width:100%;height:8px;background:#e8e3ec;border-radius:10px;overflow:hidden;}
-        .progress-bar-inner{height:100%;background:linear-gradient(90deg,#7b6b8e,#a390b8);width:0%;transition:width 0.35s;}
+        /* ===== 16PF 独有样式 ===== */
         .page-nav{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;justify-content:center;}
         .page-btn{border:1px solid #d8d2de;background:#fff;padding:5px 10px;border-radius:14px;font-size:0.7rem;cursor:pointer;
             font-weight:500;color:var(--text-secondary);transition:var(--transition);}
         .page-btn.active{background:var(--personality);color:#fff;border-color:var(--personality);}
         .page-btn.completed{background:#e2daea;color:#5a4a6e;}
-        .questions-card{background:var(--card-bg);border-radius:var(--radius-lg);padding:20px 20px 10px;
-            box-shadow:var(--shadow-sm);border:1px solid rgba(58,53,64,0.05);margin-bottom:16px;}
-        .question-item{padding:10px 0;border-bottom:1px solid #f0edf3;}
-        .question-item:last-child{border-bottom:none;}
-        .question-num{display:inline-block;background:var(--personality-bg);color:var(--personality);font-weight:700;
-            font-size:0.7rem;width:22px;height:22px;line-height:22px;text-align:center;border-radius:50%;margin-right:6px;}
-        .question-text{font-weight:500;font-size:0.9rem;color:#2c2633;display:inline;}
-        .options-row{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;}
-        .option-btn{flex:1;min-width:65px;padding:8px 4px;border-radius:18px;border:1.5px solid #e0dbe4;background:#fff;
-            cursor:pointer;font-size:0.75rem;font-weight:500;color:var(--text-secondary);text-align:center;
-            transition:var(--transition);user-select:none;}
-        .option-btn:hover{border-color:#c5bdd0;background:#faf9fb;}
-        .option-btn.selected{background:var(--personality);color:#fff;border-color:var(--personality);font-weight:600;}
-        .nav-buttons{display:flex;gap:12px;justify-content:center;margin-bottom:32px;flex-wrap:wrap;}
-        .nav-btn{padding:12px 28px;border-radius:24px;border:1.5px solid #d8d2de;background:#fff;cursor:pointer;
-            font-size:0.9rem;font-weight:600;color:var(--text);transition:var(--transition);}
-        .nav-btn:hover:not(:disabled){border-color:#b8b0c0;box-shadow:var(--shadow-md);}
-        .nav-btn:disabled{opacity:0.4;cursor:not-allowed;background:#f5f3f7;}
-        .nav-btn.submit-btn{background:#3d5a4f;color:#fff;border-color:#3d5a4f;}
-        .nav-btn.clear-btn{color:var(--danger);border-color:#e8c8c0;}
-        .results-section{display:none;background:var(--card-bg);border-radius:var(--radius-xl);padding:28px 24px;
-            box-shadow:var(--shadow-lg);margin-bottom:32px;}
-        .results-section.visible{display:block;animation:fadeInUp 0.45s;}
-        @keyframes fadeInUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
-        .results-header{text-align:center;margin-bottom:20px;}
         .factor-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;}
         .factor-card{background:#faf8fc;border-radius:var(--radius);padding:12px;border:1px solid #eeeaf2;}
         .factor-code{font-weight:700;color:var(--personality);font-size:0.9rem;}
         .factor-name{font-size:0.75rem;color:var(--text-muted);}
         .factor-score{font-size:1.2rem;font-weight:700;margin:4px 0;}
         .factor-desc{font-size:0.7rem;color:var(--text-secondary);}
-        .footer{text-align:center;padding:20px;color:var(--text-muted);font-size:0.75rem;border-top:1px solid rgba(58,53,64,0.05);}
-        .footer a{color:var(--primary-dark);}
     </style>
 </head>
 <body>
@@ -308,7 +241,7 @@
             // 状态
             const QUESTIONS_PER_PAGE = 10;
             const totalPages = Math.ceil(questions.length / QUESTIONS_PER_PAGE);
-            let answers = {}; // answers[questionId] = 0/1/2 (选项索引)
+            let answers = {};
             let currentPage = 1;
 
             const saved = localStorage.getItem('16pf_answers');
@@ -339,7 +272,7 @@
                     let answeredCount=0;
                     for(let j=start;j<end;j++) if(answers[questions[j].id]!==undefined) answeredCount++;
                     if(answeredCount>0 && i!==currentPage) cls+=' completed';
-                    html += `<button class="${cls}" data-page="${i}">${i}</button>`;
+                    html += '<button class="'+cls+'" data-page="'+i+'">'+i+'</button>';
                 }
                 pageNav.innerHTML = html;
                 pageNav.querySelectorAll('.page-btn').forEach(btn=>{
@@ -358,13 +291,13 @@
                 pageQuestions.forEach(q=>{
                     const selected = answers[q.id];
                     const opts = q.options || ['A. 是的','B. 介于A与C之间','C. 不是的'];
-                    html += `<div class="question-item"><span class="question-num">${q.id}</span><span class="question-text">${q.text}</span>`;
-                    html += `<div class="options-row">`;
+                    html += '<div class="question-item"><span class="question-num">'+q.id+'</span><span class="question-text">'+q.text+'</span>';
+                    html += '<div class="options-row">';
                     opts.forEach((opt,idx)=>{
                         const selClass = (selected===idx) ? ' selected' : '';
-                        html += `<button class="option-btn${selClass}" data-qid="${q.id}" data-opt="${idx}">${opt}</button>`;
+                        html += '<button class="option-btn'+selClass+'" data-qid="'+q.id+'" data-opt="'+idx+'">'+opt+'</button>';
                     });
-                    html += `</div></div>`;
+                    html += '</div></div>';
                 });
                 questionsCard.innerHTML = html;
                 questionsCard.querySelectorAll('.option-btn').forEach(btn=>{
@@ -394,8 +327,8 @@
                 const answered = Object.keys(answers).length;
                 const pct = Math.round((answered/total)*100);
                 progressBar.style.width = pct+'%';
-                answeredCountEl.textContent = `已答${answered}题`;
-                progressText.textContent = `第${currentPage}页/共${totalPages}页`;
+                answeredCountEl.textContent = '已答'+answered+'题';
+                progressText.textContent = '第'+currentPage+'页/共'+totalPages+'页';
                 btnSubmit.disabled = answered < total;
             }
 
@@ -412,11 +345,10 @@
                 questions.forEach(q=>{
                     const ans = answers[q.id];
                     if(ans===undefined) return;
-                    let score = ans; // 0,1,2
+                    let score = ans;
                     if(q.reverse) score = 2 - ans;
                     scores[q.factor] += score;
                 });
-                // 简短高低分描述
                 const desc = {
                     A:'高分：外向、热情、乐群 / 低分：缄默、孤独、冷漠',
                     B:'高分：聪明、富有才识 / 低分：迟钝、学识浅薄',
@@ -442,15 +374,13 @@
                 if(Object.keys(answers).length < questions.length) { alert('请完成所有题目'); return; }
                 const {scores, desc} = calcResults();
                 resultsSection.classList.add('visible');
-                resultDate.textContent = `测评时间：${new Date().toLocaleString()}`;
+                resultDate.textContent = '测评时间：'+new Date().toLocaleString();
                 let html = '';
                 for(const f in factorNames){
                     const s = scores[f];
-                    html += `<div class="factor-card"><span class="factor-code">${f}</span> <span class="factor-name">${factorNames[f]}</span>
-                    <div class="factor-score">${s} 分</div><div class="factor-desc">${desc[f]}</div></div>`;
+                    html += '<div class="factor-card"><span class="factor-code">'+f+'</span> <span class="factor-name">'+factorNames[f]+'</span><div class="factor-score">'+s+' 分</div><div class="factor-desc">'+desc[f]+'</div></div>';
                 }
                 factorGrid.innerHTML = html;
-                // 锁定作答
                 document.querySelector('.questions-card').style.opacity='0.5';
                 document.querySelector('.nav-buttons').style.opacity='0.5';
                 document.querySelector('.nav-buttons:last-of-type').style.opacity='0.5';
